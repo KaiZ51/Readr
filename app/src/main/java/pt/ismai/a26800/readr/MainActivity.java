@@ -1,13 +1,18 @@
 package pt.ismai.a26800.readr;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +31,29 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        // creates event handlers for each category button
+        for (int i = 1; i <= 6; i++) {
+            ImageButton buttonCats = (ImageButton) findViewById(getResources()
+                    .getIdentifier("imageButton" + i, "id", this.getPackageName()));
+            buttonCats.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, ListNewsActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        // creates the side navigation drawer
+        String[] navDrawerStrings = getResources().getStringArray(R.array.nav_drawer_strings);
+        DrawerLayout navDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer);
+        ListView navDrawerOptions = (ListView) findViewById(R.id.navBarContent);
+
+        // Set the adapter for the list view
+        navDrawerOptions.setAdapter(new ArrayAdapter<>(this,
+                R.layout.drawer_list_item, navDrawerStrings));
+        // Set the list's click listener
+        //navDrawerOptions.setOnItemClickListener(new DrawerItemClickListener());
     }
 
     @Override
