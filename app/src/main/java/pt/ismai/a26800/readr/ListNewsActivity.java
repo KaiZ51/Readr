@@ -8,16 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import java.io.IOException;
+import java.util.List;
 
-import org.json.JSONObject;
-
-import retrofit2.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ListNewsActivity extends AppCompatActivity {
 
@@ -44,7 +40,8 @@ public class ListNewsActivity extends AppCompatActivity {
         // key = f9a74579d1734cde94d00ab567c1f206
 
         final TextView tvTest = (TextView) findViewById(R.id.tvTest);
-        String url = "https://newsapi.org/v1/articles?source=techcrunch&apiKey=f9a74579d1734cde94d00ab567c1f206";
+        String url = "https://newsapi.org";
+        String urlVolley = "https://newsapi.org/v1/articles?source=techcrunch&apiKey=f9a74579d1734cde94d00ab567c1f206";
 
         // Retrofit implementation
 
@@ -53,9 +50,51 @@ public class ListNewsActivity extends AppCompatActivity {
 
         tvTest.setText(api.getData());*/
 
+
+        // Create a very simple REST adapter which points the GitHub API endpoint.
+        NewsAPI_Interface client = NewsAPI_Adapter.createService(NewsAPI_Interface.class);
+
+        // Fetch and print a list of the contributors to this library.
+        Call<List<NewsAPI>> call = client.getData("techcrunch", "f9a74579d1734cde94d00ab567c1f206");
+
+        /*try {
+            List<NewsAPI> getData = call.execute().body();
+
+            for (NewsAPI contributor : getData) {
+                System.out.println(contributor.source + " (" + contributor.status + ")");
+                tvTest.setText(contributor.source + " (" + contributor.status + ")");
+            }
+        } catch (IOException e) {
+            // handle errors
+            tvTest.setText("An error ocurred!");
+        }*/
+
+        call.enqueue(new Callback<List<NewsAPI>>() {
+            @Override
+            public void onResponse(Call<List<NewsAPI>> call, Response<List<NewsAPI>> response) {
+                //List<NewsAPI> myItem=response.body();
+                if (response.body() != null) {
+                    tvTest.setText(response.body().toString());
+                } else {
+                    tvTest.setText("It's null, " + response.errorBody().toString() + ", " + call.request().url());
+                }
+                /*for (NewsAPI contributor : response.body()) {
+                    System.out.println(contributor.source + " (" + contributor.status + ")");
+                    tvTest.setText(contributor.source + " (" + contributor.status + ")");
+                }*/
+            }
+
+            @Override
+            public void onFailure(Call<List<NewsAPI>> call, Throwable t) {
+                //Handle failure
+                tvTest.setText("An error ocurred!");
+            }
+        });
+
+
         // Volley implementation
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+        /*JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
@@ -66,12 +105,11 @@ public class ListNewsActivity extends AppCompatActivity {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
                         tvTest.setText("An error ocurred!");
                     }
                 });
 
         // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);*/
     }
 }
