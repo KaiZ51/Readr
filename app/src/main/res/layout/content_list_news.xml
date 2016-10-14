@@ -74,7 +74,7 @@
 
     </RelativeLayout>-->
 
-    <!--<GridView
+    <GridView
         android:id="@+id/gv_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -83,10 +83,11 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-    </GridView>-->
+    </GridView>
 
-    <TextView
+    <!--<TextView
         android:id="@+id/tvTest"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" />-->
+
 </android.support.v4.widget.NestedScrollView>
