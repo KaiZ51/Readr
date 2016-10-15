@@ -1,39 +1,43 @@
 package pt.ismai.a26800.readr;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class NewsAdapter extends ArrayAdapter {
+public class NewsAdapter extends ArrayAdapter<Articles> {
     Context mContext;
-    ArrayList<NewsAPI> news;
+    ArrayList<Articles> articles;
 
-    public NewsAdapter(Context c, ArrayList<NewsAPI> news) {
-        super(c, -1, news);
+    public NewsAdapter(Context c, int resource, ArrayList<Articles> articles) {
+        super(c, resource, articles);
         this.mContext = c;
-        this.news = news;
+        this.articles = articles;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) mContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.rowlayout, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.label);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-        textView.setText(values[position]);
-        // change the icon for Windows and iPhone
-        String s = values[position];
-        if (s.startsWith("iPhone")) {
-            imageView.setImageResource(R.drawable.no);
-        } else {
-            imageView.setImageResource(R.drawable.ok);
-        }
+        // get the property we are displaying
+        Articles article = articles.get(position);
 
-        return rowView;
+        // get the inflater and inflate the XML layout for each item
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.article_layout, null);
+
+        ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView description = (TextView) view.findViewById(R.id.description);
+
+        thumbnail.setImageResource(R.mipmap.ic_launcher);
+        title.setText(article.title);
+        description.setText(article.description);
+
+        return view;
     }
 }
