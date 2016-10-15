@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class NewsAdapter extends ArrayAdapter<Articles> {
@@ -34,7 +36,7 @@ public class NewsAdapter extends ArrayAdapter<Articles> {
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView description = (TextView) view.findViewById(R.id.description);
 
-        thumbnail.setImageResource(R.mipmap.ic_launcher);
+        Picasso.with(mContext).load(article.urlToImage).into(thumbnail);
         title.setText(article.title);
         description.setText(article.description);
 
