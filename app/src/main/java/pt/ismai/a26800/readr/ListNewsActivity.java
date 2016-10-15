@@ -6,11 +6,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,7 +33,6 @@ public class ListNewsActivity extends AppCompatActivity {
         // https://newsapi.org/v1/articles?source=techcrunch&apiKey={API_KEY}
         // key = 17f8ddef543c4c81a9df2beb60c2a478
 
-        //final TextView tvTest = (TextView) findViewById(R.id.tvTest);
         String url = "https://newsapi.org";
 
         // Retrofit implementation
@@ -50,39 +44,25 @@ public class ListNewsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<NewsAPI> call, Response<NewsAPI> response) {
                 if (response.body() != null) {
-                    /*tvTest.setText("Status: " + response.body().status + "\n" +
-                            "News source: " + response.body().source + "\n \n");
-
-                    for (Articles article : response.body().articles) {
-                        tvTest.append("Title: " + article.title + "\n" +
-                                "Description: " + article.description + "\n \n");*/
-
                     System.out.println("Status: " + response.body().status + "\n" +
                             "News source: " + response.body().source + "\n" +
                             "Articles object: " + response.body().articles + "\n \n");
 
-                    //ArrayList<Articles> artList = new ArrayList<Articles>();
-
                     for (Articles article : response.body().articles) {
                         System.out.println("Title: " + article.title + "\n" +
                                 "Description: " + article.description + "\n \n");
-
-                        //artList.add();
                     }
 
-                    GridView gv_content = (GridView) findViewById(R.id.gv_content);
+                    ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
                     NewsAdapter nAdapter = new NewsAdapter(ListNewsActivity.this,
                             R.layout.article_layout, response.body().articles);
                     gv_content.setAdapter(nAdapter);
+                    gv_content.setExpanded(true);
                 }
             }
 
             @Override
             public void onFailure(Call<NewsAPI> call, Throwable t) {
-                /*tvTest.setText("An error ocurred!\n" +
-                        "URL: " + call.request().url() + "\n" +
-                        "Cause: " + t.getCause().toString());*/
-
                 System.out.println("An error ocurred!\n" +
                         "URL: " + call.request().url() + "\n" +
                         "Cause: " + t.getCause().toString());
