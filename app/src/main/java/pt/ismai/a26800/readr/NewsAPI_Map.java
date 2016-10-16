@@ -2,12 +2,12 @@ package pt.ismai.a26800.readr;
 
 import java.util.ArrayList;
 
-public class NewsAPI {
+public class NewsAPI_Map {
     String status;
     String source;
-    ArrayList<Articles> articles;
+    ArrayList<Articles_Map> articles;
 
-    public NewsAPI(String status, String source, ArrayList<Articles> articles) {
+    public NewsAPI_Map(String status, String source, ArrayList<Articles_Map> articles) {
         this.status = status;
         this.source = source;
         this.articles = articles;

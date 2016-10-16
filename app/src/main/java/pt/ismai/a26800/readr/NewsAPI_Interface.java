@@ -6,5 +6,5 @@ import retrofit2.http.Query;
 
 public interface NewsAPI_Interface {
     @GET("/v1/articles")
-    Call<NewsAPI> getData(@Query("source") String source, @Query("apiKey") String api_key);
+    Call<NewsAPI_Map> getData(@Query("source") String source, @Query("apiKey") String api_key);
 }

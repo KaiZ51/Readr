@@ -13,11 +13,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class NewsAdapter extends ArrayAdapter<Articles> {
+public class NewsAdapter extends ArrayAdapter<Articles_Map> {
     Context mContext;
-    ArrayList<Articles> articles;
+    ArrayList<Articles_Map> articles;
 
-    public NewsAdapter(Context c, int resource, ArrayList<Articles> articles) {
+    public NewsAdapter(Context c, int resource, ArrayList<Articles_Map> articles) {
         super(c, resource, articles);
         this.mContext = c;
         this.articles = articles;
@@ -26,7 +26,7 @@ public class NewsAdapter extends ArrayAdapter<Articles> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // get the property we are displaying
-        Articles article = articles.get(position);
+        Articles_Map article = articles.get(position);
 
         // get the inflater and inflate the XML layout for each item
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);

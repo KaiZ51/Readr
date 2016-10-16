@@ -33,39 +33,68 @@ public class ListNewsActivity extends AppCompatActivity {
         // https://newsapi.org/v1/articles?source=techcrunch&apiKey={API_KEY}
         // key = 17f8ddef543c4c81a9df2beb60c2a478
 
-        String url = "https://newsapi.org";
-
         // Retrofit implementation
 
-        NewsAPI_Interface client = NewsAPI_Adapter.createService(NewsAPI_Interface.class);
-        Call<NewsAPI> call = client.getData("techcrunch", "17f8ddef543c4c81a9df2beb60c2a478");
+        // Sources endpoint
+        Sources_Interface client_sources = NewsAPI_Adapter.createService(Sources_Interface.class);
+        Call<Sources_Map> call_sources = client_sources.getData("sport", "en", "us");
 
-        call.enqueue(new Callback<NewsAPI>() {
+        call_sources.enqueue(new Callback<Sources_Map>() {
             @Override
-            public void onResponse(Call<NewsAPI> call, Response<NewsAPI> response) {
+            public void onResponse(Call<Sources_Map> call_sources, Response<Sources_Map> response) {
                 if (response.body() != null) {
-                    System.out.println("Status: " + response.body().status + "\n" +
-                            "News source: " + response.body().source + "\n" +
-                            "Articles object: " + response.body().articles + "\n \n");
+                    //System.out.println("Content here: " + response.body().sources);
 
-                    for (Articles article : response.body().articles) {
-                        System.out.println("Title: " + article.title + "\n" +
-                                "Description: " + article.description + "\n \n");
+                    for (Sources_Content source : response.body().sources) {
+                        System.out.println("ID: " + source.id + "\n" +
+                                "Category: " + source.category + "\n" +
+                                "Language: " + source.language + "\n" +
+                                "Country: " + source.country + "\n" +
+                                "Array: " + source.sortBysAvailable + "\n \n");
+
+                        if (source.sortBysAvailable.contains("latest")) {
+                            System.out.println("Has latest!" + "\n \n");
+                        }
                     }
 
-                    ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
-                    NewsAdapter nAdapter = new NewsAdapter(ListNewsActivity.this,
-                            R.layout.article_layout, response.body().articles);
-                    gv_content.setAdapter(nAdapter);
-                    gv_content.setExpanded(true);
+                    // Articles endpoint
+                    NewsAPI_Interface client = NewsAPI_Adapter.createService(NewsAPI_Interface.class);
+                    Call<NewsAPI_Map> call = client.getData("techcrunch", "17f8ddef543c4c81a9df2beb60c2a478");
+
+                    call.enqueue(new Callback<NewsAPI_Map>() {
+                        @Override
+                        public void onResponse(Call<NewsAPI_Map> call, Response<NewsAPI_Map> response) {
+                            if (response.body() != null) {
+                                /*System.out.println("Status: " + response.body().status + "\n" +
+                                        "News source: " + response.body().source + "\n" +
+                                        "Articles_Map object: " + response.body().articles + "\n \n");
+
+                                for (Articles_Map article : response.body().articles) {
+                                    System.out.println("Title: " + article.title + "\n" +
+                                            "Description: " + article.description + "\n \n");
+                                }*/
+
+                                ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
+                                NewsAdapter nAdapter = new NewsAdapter(ListNewsActivity.this,
+                                        R.layout.article_layout, response.body().articles);
+                                gv_content.setAdapter(nAdapter);
+                                gv_content.setExpanded(true);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<NewsAPI_Map> call, Throwable t) {
+                            System.out.println("An error ocurred!\n" +
+                                    "URL: " + call.request().url() + "\n" +
+                                    "Cause: " + t.getCause().toString());
+                        }
+                    });
                 }
             }
 
             @Override
-            public void onFailure(Call<NewsAPI> call, Throwable t) {
-                System.out.println("An error ocurred!\n" +
-                        "URL: " + call.request().url() + "\n" +
-                        "Cause: " + t.getCause().toString());
+            public void onFailure(Call<Sources_Map> call_sources, Throwable t) {
+                System.out.println("An error ocurred!");
             }
         });
     }
