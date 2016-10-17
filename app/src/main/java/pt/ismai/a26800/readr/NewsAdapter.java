@@ -11,37 +11,40 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class NewsAdapter extends ArrayAdapter<Articles_Map> {
     Context mContext;
-    ArrayList<Articles_Map> articles;
 
     public NewsAdapter(Context c, int resource) {
         super(c, resource);
         this.mContext = c;
-        this.articles = new ArrayList<>();
     }
 
-    public NewsAdapter(Context c, int resource, ArrayList<Articles_Map> articles) {
+    public NewsAdapter(Context c, int resource, List<Articles_Map> articles) {
         super(c, resource, articles);
         this.mContext = c;
-        this.articles = articles;
     }
 
-    /*public void addAll(ArrayList<Articles_Map> articles) {
+    /*public void addAll(List<Articles_Map> articles) {
         if (this.articles == null) {
             this.articles = new ArrayList<>(articles);
         } else {
             this.articles.addAll(articles);
         }
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getCount() {
+        int size = articles == null ? 0 : articles.size();
+        return size;
     }*/
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // get the property we are displaying
-        Articles_Map article = articles.get(position);
+        Articles_Map article = getItem(position);
 
         // get the inflater and inflate the XML layout for each item
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);

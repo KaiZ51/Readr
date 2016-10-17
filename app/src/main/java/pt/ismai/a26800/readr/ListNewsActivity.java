@@ -61,8 +61,6 @@ public class ListNewsActivity extends AppCompatActivity {
                                 "Array: " + source.sortBysAvailable + "\n \n");*/
 
                         if (source.sortBysAvailable.contains("latest")) {
-                            //System.out.println("Has latest!" + "\n \n");
-
                             // Articles endpoint
                             NewsAPI_Interface client = NewsAPI_Adapter.createService(NewsAPI_Interface.class);
                             Call<NewsAPI_Map> call = client.getData(source.id, "17f8ddef543c4c81a9df2beb60c2a478");
@@ -80,14 +78,12 @@ public class ListNewsActivity extends AppCompatActivity {
                                                     "Description: " + article.description + "\n \n");
                                         }*/
 
-
                                         ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
-                                        /*NewsAdapter nAdapter = new NewsAdapter(ListNewsActivity.this,
-                                                R.layout.article_layout, response.body().articles);*/
                                         nAdapter.addAll(response.body().articles);
                                         System.out.println("Source ID: " + source.id + "\n" +
                                                 "Adapter count: " + nAdapter.getCount() + "\n" +
-                                                "Response body: " + response.body().articles + "\n");
+                                                "Response body: " + response.body().articles + "\n" +
+                                                "Articles count: " + nAdapter.getCount() + "\n");
                                         gv_content.setAdapter(nAdapter);
                                         gv_content.setExpanded(true);
                                     }
