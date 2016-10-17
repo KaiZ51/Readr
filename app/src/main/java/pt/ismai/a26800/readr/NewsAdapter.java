@@ -17,11 +17,26 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
     Context mContext;
     ArrayList<Articles_Map> articles;
 
+    public NewsAdapter(Context c, int resource) {
+        super(c, resource);
+        this.mContext = c;
+        this.articles = new ArrayList<>();
+    }
+
     public NewsAdapter(Context c, int resource, ArrayList<Articles_Map> articles) {
         super(c, resource, articles);
         this.mContext = c;
         this.articles = articles;
     }
+
+    /*public void addAll(ArrayList<Articles_Map> articles) {
+        if (this.articles == null) {
+            this.articles = new ArrayList<>(articles);
+        } else {
+            this.articles.addAll(articles);
+        }
+        notifyDataSetChanged();
+    }*/
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
