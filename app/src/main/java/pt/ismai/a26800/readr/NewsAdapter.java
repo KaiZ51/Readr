@@ -27,36 +27,24 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         this.mContext = c;
     }
 
-    /*public void addAll(List<Articles_Map> articles) {
-        if (this.articles == null) {
-            this.articles = new ArrayList<>(articles);
-        } else {
-            this.articles.addAll(articles);
-        }
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public int getCount() {
-        int size = articles == null ? 0 : articles.size();
-        return size;
-    }*/
-
     protected void doAdd(Articles_Map another) {
         super.add(another);
     }
 
-    public void addAll(Articles_Map... others) {
+    public void addAll(List<Articles_Map> others) {
         for (Articles_Map a : others) {
             this.doAdd(a);
         }
-        this.sort(byPublishedAtComparator);
+        //this.sort(byPublishedAtComparator);
     }
 
     private static final Comparator<Articles_Map> byPublishedAtComparator =
             new Comparator<Articles_Map>() {
                 public int compare(Articles_Map o1, Articles_Map o2) {
-                    // Improve this to handle null publishedAt
+                    // needs further testing in case of nulls
+                    if (o1.publishedAt == null || o2.publishedAt == null) {
+                        return 0;
+                    }
                     return o1.publishedAt.compareTo(o2.publishedAt);
                 }
             };
@@ -74,7 +62,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView description = (TextView) view.findViewById(R.id.description);
 
-        Picasso.with(mContext).load(article.urlToImage).into(thumbnail);
+        Picasso.with(mContext).load(article.urlToImage).fit().centerCrop().into(thumbnail);
         title.setText(article.title);
         description.setText(article.description);
 

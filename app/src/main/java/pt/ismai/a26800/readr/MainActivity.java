@@ -34,14 +34,16 @@ public class MainActivity extends AppCompatActivity {
 
         // creates event handlers for each category button
         for (int i = 1; i <= 6; i++) {
-            ImageButton buttonCats = (ImageButton) findViewById(getResources()
+            /*ImageButton buttonCats = (ImageButton) findViewById(getResources()
                     .getIdentifier("imageButton" + i, "id", this.getPackageName()));
             buttonCats.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, ListNewsActivity.class);
                     startActivity(intent);
                 }
-            });
+            });*/
+
+            goToCategory(i, ListNewsActivity.class, "general");
         }
 
         // creates the side navigation drawer
@@ -76,5 +78,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void goToCategory(int bID, final Class destinyActivity, final String category) {
+        ImageButton buttonCats = (ImageButton) findViewById(getResources()
+                .getIdentifier("imageButton" + bID, "id", this.getPackageName()));
+        buttonCats.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, destinyActivity);
+                intent.putExtra("category", category);
+                startActivity(intent);
+            }
+        });
     }
 }

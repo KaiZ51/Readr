@@ -37,7 +37,7 @@ public class ListNewsActivity extends AppCompatActivity {
         // Retrofit implementation
 
         // parameters for Sources endpoint
-        String category = "sport";
+        String category = getIntent().getStringExtra("category");
         String language = "en";
         String country = "us";
 
@@ -60,50 +60,49 @@ public class ListNewsActivity extends AppCompatActivity {
                                 "Country: " + source.country + "\n" +
                                 "Array: " + source.sortBysAvailable + "\n \n");*/
 
-                        if (source.sortBysAvailable.contains("latest")) {
-                            // Articles endpoint
-                            NewsAPI_Interface client = NewsAPI_Adapter.createService(NewsAPI_Interface.class);
-                            Call<NewsAPI_Map> call = client.getData(source.id, "17f8ddef543c4c81a9df2beb60c2a478");
+                        // Articles endpoint
+                        NewsAPI_Interface client = NewsAPI_Adapter.createService(NewsAPI_Interface.class);
+                        Call<NewsAPI_Map> call = client.getData(source.id, "17f8ddef543c4c81a9df2beb60c2a478");
 
-                            call.enqueue(new Callback<NewsAPI_Map>() {
-                                @Override
-                                public void onResponse(Call<NewsAPI_Map> call, Response<NewsAPI_Map> response) {
-                                    if (response.body() != null) {
+                        call.enqueue(new Callback<NewsAPI_Map>() {
+                            @Override
+                            public void onResponse(Call<NewsAPI_Map> call, Response<NewsAPI_Map> response) {
+                                if (response.body() != null) {
                                         /*System.out.println("Status: " + response.body().status + "\n" +
                                                 "News source: " + response.body().source + "\n" +
                                                 "Articles_Map object: " + response.body().articles + "\n \n");*/
 
-                                        for (Articles_Map article : response.body().articles) {
-                                            System.out.println("Title: " + article.title + "\n" +
-                                                    "Description: " + article.description + "\n" +
-                                                    "Date: " + article.publishedAt + "\n");
-                                        }
-
-                                        ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
-                                        nAdapter.addAll(response.body().articles);
-                                        System.out.println("Source ID: " + source.id + "\n" +
-                                                "Adapter count: " + nAdapter.getCount() + "\n" +
-                                                "Response body: " + response.body().articles + "\n" +
-                                                "Articles count: " + nAdapter.getCount() + "\n");
-
-                                        for (int i = 0; i < nAdapter.getCount(); i++) {
-                                            System.out.println("Source ID: " + source.id + "\n" +
-                                                    "Adapter content: " + nAdapter.getItem(i).publishedAt);
-                                        }
-
-                                        gv_content.setAdapter(nAdapter);
-                                        gv_content.setExpanded(true);
+                                    for (Articles_Map article : response.body().articles) {
+                                        System.out.println("Title: " + article.title + "\n" +
+                                                "Description: " + article.description + "\n" +
+                                                "Date: " + article.publishedAt + "\n");
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<NewsAPI_Map> call, Throwable t) {
-                                    System.out.println("An error ocurred!\n" +
-                                            "URL: " + call.request().url() + "\n" +
-                                            "Cause: " + t.getCause().toString());
+                                    ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
+                                    nAdapter.addAll(response.body().articles);
+
+                                    System.out.println("Source ID: " + source.id + "\n" +
+                                            "Adapter count: " + nAdapter.getCount() + "\n" +
+                                            "Response body: " + response.body().articles + "\n" +
+                                            "Articles count: " + nAdapter.getCount() + "\n");
+
+                                    for (int i = 0; i < nAdapter.getCount(); i++) {
+                                        System.out.println("Source ID: " + source.id + "\n" +
+                                                "Adapter content: " + nAdapter.getItem(i).publishedAt);
+                                    }
+
+                                    gv_content.setAdapter(nAdapter);
+                                    gv_content.setExpanded(true);
                                 }
-                            });
-                        }
+                            }
+
+                            @Override
+                            public void onFailure(Call<NewsAPI_Map> call, Throwable t) {
+                                System.out.println("An error ocurred!\n" +
+                                        "URL: " + call.request().url() + "\n" +
+                                        "Cause: " + t.getCause().toString());
+                            }
+                        });
                     }
                 }
             }
