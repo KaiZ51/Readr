@@ -71,12 +71,13 @@ public class ListNewsActivity extends AppCompatActivity {
                                     if (response.body() != null) {
                                         /*System.out.println("Status: " + response.body().status + "\n" +
                                                 "News source: " + response.body().source + "\n" +
-                                                "Articles_Map object: " + response.body().articles + "\n \n");
+                                                "Articles_Map object: " + response.body().articles + "\n \n");*/
 
                                         for (Articles_Map article : response.body().articles) {
                                             System.out.println("Title: " + article.title + "\n" +
-                                                    "Description: " + article.description + "\n \n");
-                                        }*/
+                                                    "Description: " + article.description + "\n" +
+                                                    "Date: " + article.publishedAt + "\n");
+                                        }
 
                                         ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
                                         nAdapter.addAll(response.body().articles);
@@ -84,6 +85,12 @@ public class ListNewsActivity extends AppCompatActivity {
                                                 "Adapter count: " + nAdapter.getCount() + "\n" +
                                                 "Response body: " + response.body().articles + "\n" +
                                                 "Articles count: " + nAdapter.getCount() + "\n");
+
+                                        for (int i = 0; i < nAdapter.getCount(); i++) {
+                                            System.out.println("Source ID: " + source.id + "\n" +
+                                                    "Adapter content: " + nAdapter.getItem(i).publishedAt);
+                                        }
+
                                         gv_content.setAdapter(nAdapter);
                                         gv_content.setExpanded(true);
                                     }

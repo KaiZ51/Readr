@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class NewsAdapter extends ArrayAdapter<Articles_Map> {
@@ -40,6 +41,25 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         int size = articles == null ? 0 : articles.size();
         return size;
     }*/
+
+    protected void doAdd(Articles_Map another) {
+        super.add(another);
+    }
+
+    public void addAll(Articles_Map... others) {
+        for (Articles_Map a : others) {
+            this.doAdd(a);
+        }
+        this.sort(byPublishedAtComparator);
+    }
+
+    private static final Comparator<Articles_Map> byPublishedAtComparator =
+            new Comparator<Articles_Map>() {
+                public int compare(Articles_Map o1, Articles_Map o2) {
+                    // Improve this to handle null publishedAt
+                    return o1.publishedAt.compareTo(o2.publishedAt);
+                }
+            };
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
