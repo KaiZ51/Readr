@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class NewsAdapter extends ArrayAdapter<Articles_Map> {
@@ -19,11 +20,6 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
 
     public NewsAdapter(Context c, int resource) {
         super(c, resource);
-        this.mContext = c;
-    }
-
-    public NewsAdapter(Context c, int resource, List<Articles_Map> articles) {
-        super(c, resource, articles);
         this.mContext = c;
     }
 
@@ -35,17 +31,22 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         for (Articles_Map a : others) {
             this.doAdd(a);
         }
-        //this.sort(byPublishedAtComparator);
+        this.sort(byPublishedAtComparator);
     }
 
     private static final Comparator<Articles_Map> byPublishedAtComparator =
             new Comparator<Articles_Map>() {
+                @Override
                 public int compare(Articles_Map o1, Articles_Map o2) {
                     // needs further testing in case of nulls
                     if (o1.publishedAt == null || o2.publishedAt == null) {
                         return 0;
                     }
+
                     return o1.publishedAt.compareTo(o2.publishedAt);
+
+                    /*if (o1.publishedAt.equals(o2.publishedAt)) return 0;
+                    return (o1.publishedAt.before(o2.publishedAt) ? -1 : 1);*/
                 }
             };
 

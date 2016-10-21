@@ -30,14 +30,38 @@ public class ListNewsActivity extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // https://newsapi.org/v1/articles?source=techcrunch&apiKey={API_KEY}
-        // https://newsapi.org/v1/articles?source=techcrunch&apiKey=17f8ddef543c4c81a9df2beb60c2a478
-        // key = 17f8ddef543c4c81a9df2beb60c2a478
+        // content shown is based on the category selected on the previous activity
+        String category = getIntent().getStringExtra("category");
+        switch (category) {
+            case "general":
+                setTitle(R.string.cat_general);
+                break;
+            case "sport":
+                setTitle(R.string.cat_sports);
+                break;
+            case "business":
+                setTitle(R.string.cat_business);
+                break;
+            case "entertainment":
+                setTitle(R.string.cat_entertainment);
+                break;
+            case "music":
+                setTitle(R.string.cat_music);
+                break;
+            case "technology":
+                setTitle(R.string.cat_technology);
+                break;
+            case "gaming":
+                setTitle(R.string.cat_gaming);
+                break;
+            case "science-and-nature":
+                setTitle(R.string.cat_science_and_nature);
+                break;
+        }
 
         // Retrofit implementation
 
         // parameters for Sources endpoint
-        String category = getIntent().getStringExtra("category");
         String language = "en";
         String country = "us";
 
@@ -68,28 +92,28 @@ public class ListNewsActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<NewsAPI_Map> call, Response<NewsAPI_Map> response) {
                                 if (response.body() != null) {
-                                        /*System.out.println("Status: " + response.body().status + "\n" +
-                                                "News source: " + response.body().source + "\n" +
-                                                "Articles_Map object: " + response.body().articles + "\n \n");*/
+                                    /*System.out.println("Status: " + response.body().status + "\n" +
+                                            "News source: " + response.body().source + "\n" +
+                                            "Articles_Map object: " + response.body().articles + "\n \n");*/
 
-                                    for (Articles_Map article : response.body().articles) {
+                                    /*for (Articles_Map article : response.body().articles) {
                                         System.out.println("Title: " + article.title + "\n" +
                                                 "Description: " + article.description + "\n" +
                                                 "Date: " + article.publishedAt + "\n");
-                                    }
+                                    }*/
 
                                     ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
                                     nAdapter.addAll(response.body().articles);
 
-                                    System.out.println("Source ID: " + source.id + "\n" +
+                                    /*System.out.println("Source ID: " + source.id + "\n" +
                                             "Adapter count: " + nAdapter.getCount() + "\n" +
                                             "Response body: " + response.body().articles + "\n" +
-                                            "Articles count: " + nAdapter.getCount() + "\n");
+                                            "Articles count: " + nAdapter.getCount() + "\n");*/
 
-                                    for (int i = 0; i < nAdapter.getCount(); i++) {
+                                    /*for (int i = 0; i < nAdapter.getCount(); i++) {
                                         System.out.println("Source ID: " + source.id + "\n" +
                                                 "Adapter content: " + nAdapter.getItem(i).publishedAt);
-                                    }
+                                    }*/
 
                                     gv_content.setAdapter(nAdapter);
                                     gv_content.setExpanded(true);

@@ -56,4 +56,19 @@
         android:layout_rowWeight="1"
         app:srcCompat="@mipmap/ic_launcher"
         tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/imageButton7"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        app:srcCompat="@mipmap/ic_launcher"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:id="@+id/imageButton8"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        app:srcCompat="@mipmap/ic_launcher"
+        tools:ignore="ContentDescription" />
+
 </GridLayout>

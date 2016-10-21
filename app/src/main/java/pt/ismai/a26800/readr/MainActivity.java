@@ -33,18 +33,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // creates event handlers for each category button
-        for (int i = 1; i <= 6; i++) {
-            /*ImageButton buttonCats = (ImageButton) findViewById(getResources()
-                    .getIdentifier("imageButton" + i, "id", this.getPackageName()));
-            buttonCats.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, ListNewsActivity.class);
-                    startActivity(intent);
-                }
-            });*/
-
-            goToCategory(i, ListNewsActivity.class, "general");
-        }
+        goToCategory(1, ListNewsActivity.class, "general");
+        goToCategory(2, ListNewsActivity.class, "sport");
+        goToCategory(3, ListNewsActivity.class, "business");
+        goToCategory(4, ListNewsActivity.class, "entertainment");
+        goToCategory(5, ListNewsActivity.class, "music");
+        goToCategory(6, ListNewsActivity.class, "technology");
+        goToCategory(7, ListNewsActivity.class, "gaming");
+        goToCategory(8, ListNewsActivity.class, "science-and-nature");
 
         // creates the side navigation drawer
         String[] navDrawerStrings = getResources().getStringArray(R.array.nav_drawer_strings);
