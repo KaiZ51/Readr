@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 public class NewsAdapter extends ArrayAdapter<Articles_Map> {
@@ -38,15 +37,12 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
             new Comparator<Articles_Map>() {
                 @Override
                 public int compare(Articles_Map o1, Articles_Map o2) {
-                    // needs further testing in case of nulls
-                    if (o1.publishedAt == null || o2.publishedAt == null) {
-                        return 0;
+                    if (o1.publishedAt == null) {
+                        return (o2.publishedAt == null) ? 0 : -1;
+                    } else if (o2.publishedAt == null) {
+                        return 1;
                     }
-
                     return o1.publishedAt.compareTo(o2.publishedAt);
-
-                    /*if (o1.publishedAt.equals(o2.publishedAt)) return 0;
-                    return (o1.publishedAt.before(o2.publishedAt) ? -1 : 1);*/
                 }
             };
 
