@@ -29,6 +29,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ismai.a26800.readr.MainActivity" />
         </activity>
+        <activity android:name=".ShowArticleActivity"></activity>
     </application>
 
 </manifest>
