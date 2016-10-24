@@ -32,6 +32,7 @@ public class ListNewsActivity extends AppCompatActivity {
 
         // content shown is based on the category selected on the previous activity
         String category = getIntent().getStringExtra("category");
+
         switch (category) {
             case "general":
                 setTitle(R.string.cat_general);

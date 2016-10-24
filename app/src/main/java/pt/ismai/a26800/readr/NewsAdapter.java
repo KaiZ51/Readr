@@ -2,6 +2,7 @@ package pt.ismai.a26800.readr;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // get the property we are displaying
-        Articles_Map article = getItem(position);
+        final Articles_Map article = getItem(position);
 
         // get the inflater and inflate the XML layout for each item
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -62,6 +63,14 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         Picasso.with(mContext).load(article.urlToImage).fit().centerCrop().into(thumbnail);
         title.setText(article.title);
         description.setText(article.description);
+        description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ShowArticleActivity.class);
+                intent.putExtra("url", article.url);
+                mContext.startActivity(intent);
+            }
+        });
 
         return view;
     }
