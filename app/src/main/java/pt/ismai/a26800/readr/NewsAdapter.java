@@ -52,9 +52,18 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         // get the property we are displaying
         final Articles_Map article = getItem(position);
 
-        // get the inflater and inflate the XML layout for each item
+        // get the inflater and inflate the XML layout for each item, then set the listener
+        // for each row to be clickable, and on click the user is redirected to the WebView
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.article_layout, null);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ShowArticleActivity.class);
+                intent.putExtra("url", article.url);
+                mContext.startActivity(intent);
+            }
+        });
 
         ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
         TextView title = (TextView) view.findViewById(R.id.title);
@@ -63,14 +72,6 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         Picasso.with(mContext).load(article.urlToImage).fit().centerCrop().into(thumbnail);
         title.setText(article.title);
         description.setText(article.description);
-        description.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, ShowArticleActivity.class);
-                intent.putExtra("url", article.url);
-                mContext.startActivity(intent);
-            }
-        });
 
         return view;
     }
