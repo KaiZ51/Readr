@@ -1,10 +1,10 @@
-package pt.ismai.a26800.readr;
+package pt.ismai.a26800.readr.newsapi.Sources;
 
 import java.util.ArrayList;
 
 public class Sources_Map {
-    String status;
-    ArrayList<Sources_Content> sources;
+    private final String status;
+    public final ArrayList<Sources_Content> sources;
 
     public Sources_Map(String status, ArrayList<Sources_Content> sources) {
         this.status = status;

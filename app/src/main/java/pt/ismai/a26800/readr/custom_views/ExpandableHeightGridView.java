@@ -1,4 +1,4 @@
-package pt.ismai.a26800.readr;
+package pt.ismai.a26800.readr.custom_views;
 
 import android.content.Context;
 import android.util.AttributeSet;

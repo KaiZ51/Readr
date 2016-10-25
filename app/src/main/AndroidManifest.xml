@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/categories"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter android:label="@string/app_name">
@@ -21,15 +21,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ListNewsActivity"
+            android:name=".activities.ListNewsActivity"
             android:label="@string/cat_sports"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ismai.a26800.readr.MainActivity" />
+                android:value="pt.ismai.a26800.readr.activities.MainActivity" />
         </activity>
-        <activity android:name=".ShowArticleActivity"></activity>
+        <activity android:name=".activities.ShowArticleActivity"></activity>
     </application>
 
 </manifest>

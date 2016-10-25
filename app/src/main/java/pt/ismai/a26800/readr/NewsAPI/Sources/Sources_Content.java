@@ -1,13 +1,13 @@
-package pt.ismai.a26800.readr;
+package pt.ismai.a26800.readr.newsapi.Sources;
 
 import java.util.ArrayList;
 
 public class Sources_Content {
-    String id;
-    String category;
-    String language;
-    String country;
-    ArrayList<String> sortBysAvailable;
+    public final String id;
+    private final String category;
+    private final String language;
+    private final String country;
+    private final ArrayList<String> sortBysAvailable;
 
     public Sources_Content(String id,
                            String category,

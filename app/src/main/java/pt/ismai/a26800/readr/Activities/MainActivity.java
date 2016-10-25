@@ -1,10 +1,9 @@
-package pt.ismai.a26800.readr;
+package pt.ismai.a26800.readr.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,6 +12,8 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+
+import pt.ismai.a26800.readr.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         // creates the side navigation drawer
         String[] navDrawerStrings = getResources().getStringArray(R.array.nav_drawer_strings);
-        DrawerLayout navDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer);
+        //DrawerLayout navDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer);
         ListView navDrawerOptions = (ListView) findViewById(R.id.navBarContent);
 
         // Set the adapter for the list view
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void goToCategory(int bID, final Class destinyActivity, final String category) {
+    private void goToCategory(int bID, final Class destinyActivity, final String category) {
         ImageButton buttonCats = (ImageButton) findViewById(getResources()
                 .getIdentifier("imageButton" + bID, "id", this.getPackageName()));
         buttonCats.setOnClickListener(new View.OnClickListener() {

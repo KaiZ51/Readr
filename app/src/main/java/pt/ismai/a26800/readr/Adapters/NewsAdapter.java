@@ -1,4 +1,4 @@
-package pt.ismai.a26800.readr;
+package pt.ismai.a26800.readr.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,15 +15,19 @@ import com.squareup.picasso.Picasso;
 import java.util.Comparator;
 import java.util.List;
 
+import pt.ismai.a26800.readr.activities.ShowArticleActivity;
+import pt.ismai.a26800.readr.newsapi.Articles.Articles_Map;
+import pt.ismai.a26800.readr.R;
+
 public class NewsAdapter extends ArrayAdapter<Articles_Map> {
-    Context mContext;
+    private final Context mContext;
 
     public NewsAdapter(Context c, int resource) {
         super(c, resource);
         this.mContext = c;
     }
 
-    protected void doAdd(Articles_Map another) {
+    private void doAdd(Articles_Map another) {
         super.add(another);
     }
 

@@ -1,4 +1,4 @@
-package pt.ismai.a26800.readr;
+package pt.ismai.a26800.readr.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import pt.ismai.a26800.readr.custom_views.ExpandableHeightGridView;
+import pt.ismai.a26800.readr.newsapi.Retrofit_Service;
+import pt.ismai.a26800.readr.newsapi.Articles.NewsAPI_Interface;
+import pt.ismai.a26800.readr.newsapi.Articles.NewsAPI_Map;
+import pt.ismai.a26800.readr.newsapi.Sources.Sources_Content;
+import pt.ismai.a26800.readr.newsapi.Sources.Sources_Interface;
+import pt.ismai.a26800.readr.newsapi.Sources.Sources_Map;
+import pt.ismai.a26800.readr.adapters.NewsAdapter;
+import pt.ismai.a26800.readr.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,7 +76,7 @@ public class ListNewsActivity extends AppCompatActivity {
         String country = "us";
 
         // Sources endpoint
-        Sources_Interface client_sources = NewsAPI_Adapter.createService(Sources_Interface.class);
+        Sources_Interface client_sources = Retrofit_Service.createService(Sources_Interface.class);
         Call<Sources_Map> call_sources = client_sources.getData(category, language, country);
 
         call_sources.enqueue(new Callback<Sources_Map>() {
@@ -86,7 +95,7 @@ public class ListNewsActivity extends AppCompatActivity {
                                 "Array: " + source.sortBysAvailable + "\n \n");*/
 
                         // Articles endpoint
-                        NewsAPI_Interface client = NewsAPI_Adapter.createService(NewsAPI_Interface.class);
+                        NewsAPI_Interface client = Retrofit_Service.createService(NewsAPI_Interface.class);
                         Call<NewsAPI_Map> call = client.getData(source.id, "17f8ddef543c4c81a9df2beb60c2a478");
 
                         call.enqueue(new Callback<NewsAPI_Map>() {
