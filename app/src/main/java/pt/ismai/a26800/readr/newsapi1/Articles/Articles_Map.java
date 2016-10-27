@@ -1,4 +1,4 @@
-package pt.ismai.a26800.readr.newsapi.Articles;
+package pt.ismai.a26800.readr.newsapi1.Articles;
 
 import java.util.Date;
 

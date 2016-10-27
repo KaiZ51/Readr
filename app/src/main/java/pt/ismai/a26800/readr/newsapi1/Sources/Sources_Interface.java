@@ -1,4 +1,4 @@
-package pt.ismai.a26800.readr.newsapi.Sources;
+package pt.ismai.a26800.readr.newsapi1.Sources;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

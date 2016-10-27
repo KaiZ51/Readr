@@ -1,4 +1,4 @@
-package pt.ismai.a26800.readr.newsapi;
+package pt.ismai.a26800.readr.newsapi1;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;

@@ -1,4 +1,4 @@
-package pt.ismai.a26800.readr.activities;
+package pt.ismai.a26800.readr.activities1;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -35,7 +36,7 @@ public class ShowArticleActivity extends AppCompatActivity {
         });
 
         wv.setWebViewClient(new WebViewClient() {
-           /* @Override
+            @Override
             public void onLoadResource(WebView view, String url) {
                 setTitle(wv.getTitle());
             }
@@ -43,7 +44,7 @@ public class ShowArticleActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 setTitle(wv.getTitle());
-            }*/
+            }
         });
         wv.loadUrl(url);
     }
@@ -63,7 +64,10 @@ public class ShowArticleActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_fullscreen) {
-            return true;
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
         }
 
         //noinspection SimplifiableIfStatement
