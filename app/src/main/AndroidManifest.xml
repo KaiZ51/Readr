@@ -29,7 +29,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pt.ismai.a26800.readr.activities.MainActivity" />
         </activity>
-        <activity android:name=".activities.ShowArticleActivity"></activity>
+        <activity
+            android:name=".activities.ShowArticleActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
