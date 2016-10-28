@@ -1,17 +1,17 @@
-package pt.ismai.a26800.readr.activities1;
+package pt.ismai.a26800.readr.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import pt.ismai.a26800.readr.custom_views.ExpandableHeightGridView;
-import pt.ismai.a26800.readr.newsapi1.Retrofit_Service;
-import pt.ismai.a26800.readr.newsapi1.Articles.NewsAPI_Interface;
-import pt.ismai.a26800.readr.newsapi1.Articles.NewsAPI_Map;
-import pt.ismai.a26800.readr.newsapi1.Sources.Sources_Content;
-import pt.ismai.a26800.readr.newsapi1.Sources.Sources_Interface;
-import pt.ismai.a26800.readr.newsapi1.Sources.Sources_Map;
-import pt.ismai.a26800.readr.adapters1.NewsAdapter;
+import pt.ismai.a26800.readr.newsapi.Retrofit_Service;
+import pt.ismai.a26800.readr.newsapi.Articles.NewsAPI_Interface;
+import pt.ismai.a26800.readr.newsapi.Articles.NewsAPI_Map;
+import pt.ismai.a26800.readr.newsapi.Sources.Sources_Content;
+import pt.ismai.a26800.readr.newsapi.Sources.Sources_Interface;
+import pt.ismai.a26800.readr.newsapi.Sources.Sources_Map;
+import pt.ismai.a26800.readr.adapters.NewsAdapter;
 import pt.ismai.a26800.readr.R;
 import retrofit2.Call;
 import retrofit2.Callback;

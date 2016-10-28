@@ -1,4 +1,4 @@
-package pt.ismai.a26800.readr.activities1;
+package pt.ismai.a26800.readr.activities;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -65,9 +65,22 @@ public class ShowArticleActivity extends AppCompatActivity {
 
         if (id == R.id.action_fullscreen) {
             View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
+
+            // if immersive mode isn't on
+            if ((decorView.getSystemUiVisibility() & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            }
+            // if immersive mode is on, then set it off
+            else {
+                decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            }
         }
 
         //noinspection SimplifiableIfStatement

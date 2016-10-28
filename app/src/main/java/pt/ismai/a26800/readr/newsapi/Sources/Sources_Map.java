@@ -1,4 +1,4 @@
-package pt.ismai.a26800.readr.newsapi1.Sources;
+package pt.ismai.a26800.readr.newsapi.Sources;
 
 import java.util.ArrayList;
 

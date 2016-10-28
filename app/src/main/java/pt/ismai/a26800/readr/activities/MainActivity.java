@@ -1,4 +1,4 @@
-package pt.ismai.a26800.readr.activities1;
+package pt.ismai.a26800.readr.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
