@@ -13,6 +13,9 @@
     <string name="cat_gaming">Gaming</string>
     <string name="cat_science_and_nature">Science And Nature</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string-array name="nav_drawer_strings">
         <item>Option 1</item>
         <item>Option 2</item>
