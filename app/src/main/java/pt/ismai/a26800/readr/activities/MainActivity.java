@@ -26,27 +26,16 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // creates event handlers for each category button
-        goToCategory(1, ListNewsActivity.class, "general");
-        goToCategory(2, ListNewsActivity.class, "sport");
-        goToCategory(3, ListNewsActivity.class, "business");
-        goToCategory(4, ListNewsActivity.class, "entertainment");
-        goToCategory(5, ListNewsActivity.class, "music");
-        goToCategory(6, ListNewsActivity.class, "technology");
-        goToCategory(7, ListNewsActivity.class, "gaming");
-        goToCategory(8, ListNewsActivity.class, "science-and-nature");
+        goToCategoryListener(1, "general");
+        goToCategoryListener(2, "sport");
+        goToCategoryListener(3, "business");
+        goToCategoryListener(4, "entertainment");
+        goToCategoryListener(5, "music");
+        goToCategoryListener(6, "technology");
+        goToCategoryListener(7, "gaming");
+        goToCategoryListener(8, "science-and-nature");
 
         // creates the side navigation drawer
-        /*
-        String[] navDrawerStrings = getResources().getStringArray(R.array.nav_drawer_strings);
-        //DrawerLayout navDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer);
-        ListView navDrawerOptions = (ListView) findViewById(R.id.navBarContent);
-
-        // Set the adapter for the list view
-        navDrawerOptions.setAdapter(new ArrayAdapter<>(this,
-                R.layout.drawer_list_item, navDrawerStrings));*/
-        // Set the list's click listener
-        //navDrawerOptions.setOnItemClickListener(new DrawerItemClickListener());
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.nav_drawer);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -84,36 +73,22 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        /*if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }*/
-
         if (id == R.id.nav_general) {
-            goToCategory(1, ListNewsActivity.class, "general");
+            goToCategory("general");
         } else if (id == R.id.nav_sports) {
-            goToCategory(2, ListNewsActivity.class, "sport");
+            goToCategory("sport");
         } else if (id == R.id.nav_business) {
-            goToCategory(3, ListNewsActivity.class, "business");
+            goToCategory("business");
         } else if (id == R.id.nav_entertainment) {
-            goToCategory(4, ListNewsActivity.class, "entertainment");
+            goToCategory("entertainment");
         } else if (id == R.id.nav_music) {
-            goToCategory(5, ListNewsActivity.class, "music");
+            goToCategory("music");
         } else if (id == R.id.nav_technology) {
-            goToCategory(6, ListNewsActivity.class, "technology");
+            goToCategory("technology");
         } else if (id == R.id.nav_gaming) {
-            goToCategory(7, ListNewsActivity.class, "gaming");
+            goToCategory("gaming");
         } else if (id == R.id.nav_science_and_nature) {
-            goToCategory(8, ListNewsActivity.class, "science-and-nature");
+            goToCategory("science-and-nature");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.nav_drawer);
@@ -121,12 +96,18 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void goToCategory(int bID, final Class destinyActivity, final String category) {
+    private void goToCategory(String category) {
+        Intent intent = new Intent(MainActivity.this, ListNewsActivity.class);
+        intent.putExtra("category", category);
+        startActivity(intent);
+    }
+
+    private void goToCategoryListener(int bID, final String category) {
         ImageButton buttonCats = (ImageButton) findViewById(getResources()
                 .getIdentifier("imageButton" + bID, "id", this.getPackageName()));
         buttonCats.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, destinyActivity);
+                Intent intent = new Intent(MainActivity.this, ListNewsActivity.class);
                 intent.putExtra("category", category);
                 startActivity(intent);
             }
