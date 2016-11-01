@@ -33,15 +33,18 @@ public class MainActivity extends AppCompatActivity {
         goToCategory(8, ListNewsActivity.class, "science-and-nature");
 
         // creates the side navigation drawer
+        /*
         String[] navDrawerStrings = getResources().getStringArray(R.array.nav_drawer_strings);
         //DrawerLayout navDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer);
         ListView navDrawerOptions = (ListView) findViewById(R.id.navBarContent);
 
         // Set the adapter for the list view
         navDrawerOptions.setAdapter(new ArrayAdapter<>(this,
-                R.layout.drawer_list_item, navDrawerStrings));
+                R.layout.drawer_list_item, navDrawerStrings));*/
         // Set the list's click listener
         //navDrawerOptions.setOnItemClickListener(new DrawerItemClickListener());
+
+
     }
 
     @Override
