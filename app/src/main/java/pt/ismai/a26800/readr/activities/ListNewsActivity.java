@@ -1,8 +1,14 @@
 package pt.ismai.a26800.readr.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import pt.ismai.a26800.readr.custom_views.ExpandableHeightGridView;
 import pt.ismai.a26800.readr.newsapi.Retrofit_Service;
@@ -17,7 +23,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ListNewsActivity extends AppCompatActivity {
+public class ListNewsActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +34,16 @@ public class ListNewsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // creates the side navigation drawer
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.nav_drawer);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         // content shown is based on the category selected on the previous activity
         String category = getIntent().getStringExtra("category");
@@ -135,5 +152,39 @@ public class ListNewsActivity extends AppCompatActivity {
                 System.out.println("An error ocurred!");
             }
         });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_general) {
+            goToCategory("general");
+        } else if (id == R.id.nav_sports) {
+            goToCategory("sport");
+        } else if (id == R.id.nav_business) {
+            goToCategory("business");
+        } else if (id == R.id.nav_entertainment) {
+            goToCategory("entertainment");
+        } else if (id == R.id.nav_music) {
+            goToCategory("music");
+        } else if (id == R.id.nav_technology) {
+            goToCategory("technology");
+        } else if (id == R.id.nav_gaming) {
+            goToCategory("gaming");
+        } else if (id == R.id.nav_science_and_nature) {
+            goToCategory("science-and-nature");
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.nav_drawer);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void goToCategory(String category) {
+        Intent intent = new Intent(ListNewsActivity.this, ListNewsActivity.class);
+        intent.putExtra("category", category);
+        startActivity(intent);
     }
 }
