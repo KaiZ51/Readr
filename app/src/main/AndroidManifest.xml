@@ -31,7 +31,11 @@
         </activity>
         <activity
             android:name=".activities.ShowArticleActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/action_settings"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
