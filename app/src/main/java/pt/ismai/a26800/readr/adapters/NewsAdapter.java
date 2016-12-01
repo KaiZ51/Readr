@@ -1,8 +1,11 @@
 package pt.ismai.a26800.readr.adapters;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,8 @@ import java.util.List;
 import pt.ismai.a26800.readr.activities.ShowArticleActivity;
 import pt.ismai.a26800.readr.newsapi.Articles.Articles_Map;
 import pt.ismai.a26800.readr.R;
+import pt.ismai.a26800.readr.sqlite.ArticlesContract;
+import pt.ismai.a26800.readr.sqlite.ArticlesDbHelper;
 
 public class NewsAdapter extends ArrayAdapter<Articles_Map> {
     private final Context mContext;
@@ -32,10 +37,60 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
     }
 
     public void addAll(List<Articles_Map> others) {
+        ArticlesDbHelper mDbHelper = new ArticlesDbHelper(getContext());
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
         for (Articles_Map a : others) {
             this.doAdd(a);
+
+            // Create a new map of values, where column names are the keys
+            values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.title);
+            values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE, a.publishedAt.toString());
+
+            // Insert the new row, returning the primary key value of the new row
+            db.insert(ArticlesContract.ArticleEntry.TABLE_NAME, null, values);
         }
         this.sort(byPublishedAtComparator);
+
+        db = mDbHelper.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                ArticlesContract.ArticleEntry._ID,
+                ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE,
+                ArticlesContract.ArticleEntry.COLUMN_NAME_DATE
+        };
+
+        // Filter results WHERE "title" = 'My Title'
+        String selection = ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE + " = ?";
+        String[] selectionArgs = {"My Title"};
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + " DESC";
+
+        Cursor c = db.query(
+                ArticlesContract.ArticleEntry.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        c.moveToFirst();
+        for (int i = 0; i < c.getCount(); i++) {
+            long itemId = c.getLong(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry._ID));
+            String itemValue = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE));
+            String itemDate = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE));
+            System.out.println("ID: " + itemId + "\n" +
+                    "Value: " + itemValue + "\n" +
+                    "Date: " + itemDate);
+            c.moveToNext();
+        }
+        c.close();
     }
 
     private static final Comparator<Articles_Map> byPublishedAtComparator =
