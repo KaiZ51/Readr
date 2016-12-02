@@ -41,7 +41,7 @@ public class NotificationService extends IntentService {
                 if (response.body() != null) {
                     /*final NewsAdapter nAdapter = new NewsAdapter(ListNewsActivity.this,
                             R.layout.article_layout);*/
-                    final ArticlesList articlesList = new ArticlesList();
+                    final AbstractArticlesList<Articles_Map> articlesList = new AbstractArticlesList<>();
 
                     for (final Sources_Content source : response.body().sources) {
                         // Articles endpoint
