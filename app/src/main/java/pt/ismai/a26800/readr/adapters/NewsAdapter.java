@@ -53,7 +53,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         }
         this.sort(byPublishedAtComparator);
 
-        db = mDbHelper.getReadableDatabase();
+        /*db = mDbHelper.getReadableDatabase();
 
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
@@ -90,7 +90,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
                     "Date: " + itemDate);
             c.moveToNext();
         }
-        c.close();
+        c.close();*/
     }
 
     private static final Comparator<Articles_Map> byPublishedAtComparator =

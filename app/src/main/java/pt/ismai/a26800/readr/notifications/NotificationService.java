@@ -2,8 +2,15 @@ package pt.ismai.a26800.readr.notifications;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import pt.ismai.a26800.readr.newsapi.Articles.Articles_Map;
@@ -13,6 +20,8 @@ import pt.ismai.a26800.readr.newsapi.Retrofit_Service;
 import pt.ismai.a26800.readr.newsapi.Sources.Sources_Content;
 import pt.ismai.a26800.readr.newsapi.Sources.Sources_Interface;
 import pt.ismai.a26800.readr.newsapi.Sources.Sources_Map;
+import pt.ismai.a26800.readr.sqlite.ArticlesContract;
+import pt.ismai.a26800.readr.sqlite.ArticlesDbHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,8 +33,6 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        System.out.println("fdsfs");
-
         // parameters for Sources endpoint
         String category = "sport";
         String language = "en";
@@ -39,9 +46,19 @@ public class NotificationService extends IntentService {
             @Override
             public void onResponse(Call<Sources_Map> call_sources, Response<Sources_Map> response) {
                 if (response.body() != null) {
-                    /*final NewsAdapter nAdapter = new NewsAdapter(ListNewsActivity.this,
-                            R.layout.article_layout);*/
-                    final AbstractArticlesList<Articles_Map> articlesList = new AbstractArticlesList<>();
+                    final List<Articles_Map> articlesList = new ArrayList<>();
+                    final Comparator<Articles_Map> byPublishedAtComparator =
+                            new Comparator<Articles_Map>() {
+                                @Override
+                                public int compare(Articles_Map o1, Articles_Map o2) {
+                                    if (o1.publishedAt == null) {
+                                        return (o2.publishedAt == null) ? 0 : -1;
+                                    } else if (o2.publishedAt == null) {
+                                        return 1;
+                                    }
+                                    return o1.publishedAt.compareTo(o2.publishedAt);
+                                }
+                            };
 
                     for (final Sources_Content source : response.body().sources) {
                         // Articles endpoint
@@ -52,14 +69,9 @@ public class NotificationService extends IntentService {
                             @Override
                             public void onResponse(Call<NewsAPI_Map> call, Response<NewsAPI_Map> response) {
                                 if (response.body() != null) {
-                                    /*ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
-                                    nAdapter.addAll(response.body().articles);
-
-                                    gv_content.setAdapter(nAdapter);
-                                    gv_content.setExpanded(true);*/
-
                                     articlesList.addAll(response.body().articles);
-                                    //articlesList.sort();
+                                    Collections.sort(articlesList, byPublishedAtComparator);
+                                    compareWithDb();
                                 }
                             }
 
@@ -79,5 +91,50 @@ public class NotificationService extends IntentService {
                 System.out.println("An error ocurred!");
             }
         });
+    }
+
+    private void compareWithDb() {
+        ArticlesDbHelper mDbHelper = new ArticlesDbHelper(this);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                ArticlesContract.ArticleEntry._ID,
+                ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE,
+                ArticlesContract.ArticleEntry.COLUMN_NAME_DATE
+        };
+
+        // Filter results WHERE "title" = 'My Title'
+        String selection = ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE + " = ?";
+        String[] selectionArgs = {"My Title"};
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + " DESC";
+
+        Cursor c = db.query(
+                ArticlesContract.ArticleEntry.TABLE_NAME,   // The table to query
+                projection,                                 // The columns to return
+                null,                                       // The columns for the WHERE clause
+                null,                                       // The values for the WHERE clause
+                null,                                       // don't group the rows
+                null,                                       // don't filter by row groups
+                sortOrder                                   // The sort order
+        );
+
+        c.moveToFirst();
+
+        long itemId = c.getLong(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry._ID));
+        String itemValue = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE));
+        Date itemDate = new Date();
+        try {
+            itemDate = DateFormat.getDateTimeInstance().parse(c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE)));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println(itemDate);
+
+        c.close();
     }
 }
