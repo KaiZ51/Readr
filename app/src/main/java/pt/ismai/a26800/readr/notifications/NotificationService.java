@@ -7,11 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import pt.ismai.a26800.readr.newsapi.Articles.Articles_Map;
 import pt.ismai.a26800.readr.newsapi.Articles.NewsAPI_Interface;
@@ -127,8 +130,11 @@ public class NotificationService extends IntentService {
         long itemId = c.getLong(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry._ID));
         String itemValue = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE));
         Date itemDate = new Date();
+        DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy", Locale.ENGLISH);
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
         try {
-            itemDate = DateFormat.getDateTimeInstance().parse(c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE)));
+            //itemDate = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.FULL).parse(c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE)));
+            itemDate = df.parse(c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE)));
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

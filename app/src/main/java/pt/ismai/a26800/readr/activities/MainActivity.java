@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity
         PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + 5000,
+                SystemClock.elapsedRealtime() + 10000,
                 300000,
                 alarmIntent);
     }

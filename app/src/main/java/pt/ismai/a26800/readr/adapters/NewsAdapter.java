@@ -44,12 +44,14 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         for (Articles_Map a : others) {
             this.doAdd(a);
 
-            // Create a new map of values, where column names are the keys
-            values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.title);
-            values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE, a.publishedAt.toString());
+            if (a.publishedAt != null) {
+                // Create a new map of values, where column names are the keys
+                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.title);
+                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE, a.publishedAt.toString());
 
-            // Insert the new row, returning the primary key value of the new row
-            db.insert(ArticlesContract.ArticleEntry.TABLE_NAME, null, values);
+                // Insert the new row, returning the primary key value of the new row
+                db.insert(ArticlesContract.ArticleEntry.TABLE_NAME, null, values);
+            }
         }
         this.sort(byPublishedAtComparator);
 
