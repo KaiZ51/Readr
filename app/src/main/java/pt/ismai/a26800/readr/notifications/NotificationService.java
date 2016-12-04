@@ -1,9 +1,14 @@
 package pt.ismai.a26800.readr.notifications;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,8 +19,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
+import pt.ismai.a26800.readr.R;
+import pt.ismai.a26800.readr.activities.MainActivity;
 import pt.ismai.a26800.readr.newsapi.Articles.Articles_Map;
 import pt.ismai.a26800.readr.newsapi.Articles.NewsAPI_Interface;
 import pt.ismai.a26800.readr.newsapi.Articles.NewsAPI_Map;
@@ -74,7 +80,7 @@ public class NotificationService extends IntentService {
                                 if (response.body() != null) {
                                     articlesList.addAll(response.body().articles);
                                     Collections.sort(articlesList, byPublishedAtComparator);
-                                    compareWithDb();
+                                    compareWithDb(articlesList.get(articlesList.size() - 1).publishedAt);
                                 }
                             }
 
@@ -96,7 +102,7 @@ public class NotificationService extends IntentService {
         });
     }
 
-    private void compareWithDb() {
+    private void compareWithDb(Date apiArticle) {
         ArticlesDbHelper mDbHelper = new ArticlesDbHelper(this);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -129,18 +135,53 @@ public class NotificationService extends IntentService {
 
         long itemId = c.getLong(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry._ID));
         String itemValue = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE));
+
         Date itemDate = new Date();
-        DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy", Locale.ENGLISH);
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+        DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
         try {
-            //itemDate = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.FULL).parse(c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE)));
             itemDate = df.parse(c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE)));
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println(itemDate);
+
+        if (itemDate.before(apiArticle) && !itemDate.equals(apiArticle)) {
+            System.out.println("yes");
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.ic_general)
+                    .setContentTitle("There are new articles available!")
+                    .setContentText("Touch this notification to open the app.")
+                    .setAutoCancel(true);
+
+            // Creates an explicit intent for an Activity in your app
+            Intent resultIntent = new Intent(this, MainActivity.class);
+
+            // The stack builder object will contain an artificial back stack for the
+            // started Activity.
+            // This ensures that navigating backward from the Activity leads out of
+            // your application to the Home screen.
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            // Adds the back stack for the Intent (but not the Intent itself)
+            stackBuilder.addParentStack(MainActivity.class);
+            // Adds the Intent that starts the Activity to the top of the stack
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            // mId allows you to update the notification later on.
+            mNotificationManager.notify(50, mBuilder.build());
+        } else {
+            System.out.println("no");
+        }
 
         c.close();
+    }
+
+    // will count how many articles are new since the articles stored in the DB
+    private void newArticlesCount() {
+
     }
 }

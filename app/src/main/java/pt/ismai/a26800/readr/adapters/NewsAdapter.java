@@ -54,45 +54,6 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
             }
         }
         this.sort(byPublishedAtComparator);
-
-        /*db = mDbHelper.getReadableDatabase();
-
-        // Define a projection that specifies which columns from the database
-        // you will actually use after this query.
-        String[] projection = {
-                ArticlesContract.ArticleEntry._ID,
-                ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE,
-                ArticlesContract.ArticleEntry.COLUMN_NAME_DATE
-        };
-
-        // Filter results WHERE "title" = 'My Title'
-        String selection = ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE + " = ?";
-        String[] selectionArgs = {"My Title"};
-
-        // How you want the results sorted in the resulting Cursor
-        String sortOrder = ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + " DESC";
-
-        Cursor c = db.query(
-                ArticlesContract.ArticleEntry.TABLE_NAME,  // The table to query
-                projection,                               // The columns to return
-                null,                                // The columns for the WHERE clause
-                null,                            // The values for the WHERE clause
-                null,                                     // don't group the rows
-                null,                                     // don't filter by row groups
-                sortOrder                                 // The sort order
-        );
-
-        c.moveToFirst();
-        for (int i = 0; i < c.getCount(); i++) {
-            long itemId = c.getLong(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry._ID));
-            String itemValue = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE));
-            String itemDate = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE));
-            System.out.println("ID: " + itemId + "\n" +
-                    "Value: " + itemValue + "\n" +
-                    "Date: " + itemDate);
-            c.moveToNext();
-        }
-        c.close();*/
     }
 
     private static final Comparator<Articles_Map> byPublishedAtComparator =
