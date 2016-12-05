@@ -17,7 +17,28 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="notifications_group">Notifications</string>
-    <string name="notifications_toggle_title">Article Notifications</string>
+    <string name="notifications_toggle_title">Article notifications</string>
     <string name="notifications_on">Disables article notifications for whenever there is a new article.</string>
     <string name="notifications_off">Enables article notifications for whenever there is a new article.</string>
+
+    <string name="notifications_cat">Categories</string>
+    <string name="notifications_cat_desc">Choose for which categories you wish to receive notifications.</string>
+    <string-array name="notifications_cat_values">
+        <item>General</item>
+        <item>Sports</item>
+        <item>Business</item>
+        <item>Entertainment</item>
+        <item>Music</item>
+        <item>Technology</item>
+        <item>Gaming</item>
+        <item>Science And Nature</item>
+    </string-array>
+
+    <string name="notifications_frequency">Checking frequency</string>
+    <string name="notifications_frequency_desc">How often to check for new articles.</string>
+    <string-array name="notifications_frequency_values">
+        <item>Half hour</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+    </string-array>
 </resources>

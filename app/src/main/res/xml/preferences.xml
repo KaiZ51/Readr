@@ -14,11 +14,19 @@
             android:summary="@string/notifications_off"
             android:title="@string/notifications_toggle_title" />
 
-        <CheckBoxPreference
+        <MultiSelectListPreference
             android:dependency="notifications"
+            android:entries="@array/notifications_cat_values"
+            android:key="notifications_cat_select"
+            android:summary="@string/notifications_cat_desc"
+            android:title="@string/notifications_cat" />
+
+        <ListPreference
+            android:dependency="notifications"
+            android:entries="@array/notifications_frequency_values"
             android:key="notifications_interval"
-            android:summary="description"
-            android:title="title" />
+            android:summary="@string/notifications_frequency_desc"
+            android:title="@string/notifications_frequency" />
     </PreferenceCategory>
 
 </PreferenceScreen>
