@@ -1,11 +1,7 @@
 package pt.ismai.a26800.readr.activities;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,7 +14,6 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 
 import pt.ismai.a26800.readr.R;
-import pt.ismai.a26800.readr.notifications.NotificationAlarm;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,7 +24,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        scheduleNotificationsAlarm();
 
         // creates event handlers for each category button
         goToCategoryListener(1, "general");
@@ -119,16 +113,5 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-    }
-
-    private void scheduleNotificationsAlarm() {
-        AlarmManager alarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, NotificationAlarm.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + 10000,
-                300000,
-                alarmIntent);
     }
 }

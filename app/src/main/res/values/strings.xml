@@ -15,4 +15,9 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="notifications_group">Notifications</string>
+    <string name="notifications_toggle_title">Article Notifications</string>
+    <string name="notifications_on">Disables article notifications for whenever there is a new article.</string>
+    <string name="notifications_off">Enables article notifications for whenever there is a new article.</string>
 </resources>

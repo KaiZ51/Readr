@@ -7,4 +7,18 @@
         android:summary="Enables night mode for easier reading in low light conditions."
         android:title="Night mode" />
 
+    <PreferenceCategory android:title="@string/notifications_group">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="notifications"
+            android:summary="@string/notifications_off"
+            android:title="@string/notifications_toggle_title" />
+
+        <CheckBoxPreference
+            android:dependency="notifications"
+            android:key="notifications_interval"
+            android:summary="description"
+            android:title="title" />
+    </PreferenceCategory>
+
 </PreferenceScreen>
