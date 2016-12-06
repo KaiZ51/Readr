@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //drawerSettingsListener();
     }
 
     @Override
@@ -110,6 +112,17 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ListNewsActivity.class);
                 intent.putExtra("category", category);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void drawerSettingsListener() {
+        ImageButton buttonSettings = (ImageButton) findViewById(R.id.settings_drawer);
+        buttonSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
             }
         });
