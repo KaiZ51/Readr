@@ -2,26 +2,26 @@ package pt.ismai.a26800.readr.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
+import pt.ismai.a26800.readr.R;
+import pt.ismai.a26800.readr.adapters.NewsAdapter;
 import pt.ismai.a26800.readr.custom_views.ExpandableHeightGridView;
-import pt.ismai.a26800.readr.newsapi.Retrofit_Service;
 import pt.ismai.a26800.readr.newsapi.Articles.NewsAPI_Interface;
 import pt.ismai.a26800.readr.newsapi.Articles.NewsAPI_Map;
+import pt.ismai.a26800.readr.newsapi.Retrofit_Service;
 import pt.ismai.a26800.readr.newsapi.Sources.Sources_Content;
 import pt.ismai.a26800.readr.newsapi.Sources.Sources_Interface;
 import pt.ismai.a26800.readr.newsapi.Sources.Sources_Map;
-import pt.ismai.a26800.readr.adapters.NewsAdapter;
-import pt.ismai.a26800.readr.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,6 +49,16 @@ public class ListNewsActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View headerView = navigationView.getHeaderView(0);
+        ImageButton header = (ImageButton) headerView.findViewById(R.id.settings_drawer);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ListNewsActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         // content shown is based on the category selected on the previous activity
         String category = getIntent().getStringExtra("category");
 
@@ -72,7 +82,6 @@ public class ListNewsActivity extends AppCompatActivity
             case "music":
                 setTitle(R.string.cat_music);
                 toolbarLayout.setBackground(getDrawable(R.drawable.music_toolbar));
-
                 break;
             case "technology":
                 setTitle(R.string.cat_technology);
