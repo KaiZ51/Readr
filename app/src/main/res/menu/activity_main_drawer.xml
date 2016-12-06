@@ -14,24 +14,19 @@
                 android:title="@string/cat_sports" />
 
             <item
-                android:id="@+id/nav_business"
-                android:icon="@drawable/ic_business"
-                android:title="@string/cat_business" />
-
-            <item
                 android:id="@+id/nav_entertainment"
                 android:icon="@drawable/ic_entertainment"
                 android:title="@string/cat_entertainment" />
 
             <item
-                android:id="@+id/nav_music"
-                android:icon="@drawable/ic_music"
-                android:title="@string/cat_music" />
-
-            <item
                 android:id="@+id/nav_technology"
                 android:icon="@drawable/ic_technology"
                 android:title="@string/cat_technology" />
+
+            <item
+                android:id="@+id/nav_music"
+                android:icon="@drawable/ic_music"
+                android:title="@string/cat_music" />
 
             <item
                 android:id="@+id/nav_gaming"
@@ -42,6 +37,11 @@
                 android:id="@+id/nav_science_and_nature"
                 android:icon="@drawable/ic_science_and_nature"
                 android:title="@string/cat_science_and_nature" />
+
+            <item
+                android:id="@+id/nav_business"
+                android:icon="@drawable/ic_business"
+                android:title="@string/cat_business" />
         </menu>
     </item>
 
