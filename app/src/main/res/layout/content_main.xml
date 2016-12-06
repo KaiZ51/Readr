@@ -19,56 +19,94 @@
         android:id="@+id/imageButton1"
         android:layout_columnWeight="1"
         android:layout_rowWeight="1"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        android:layout_height="70dp"
+        android:layout_width="60dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/general"
+        android:layout_marginBottom="5dp" />
 
     <ImageButton
         android:id="@+id/imageButton2"
         android:layout_columnWeight="1"
         android:layout_rowWeight="1"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:ignore="ContentDescription" />
-
-    <ImageButton
-        android:id="@+id/imageButton3"
-        android:layout_columnWeight="1"
-        android:layout_rowWeight="1"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        android:layout_height="70dp"
+        android:layout_width="60dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/sports"
+        android:layout_marginBottom="5dp" />
 
     <ImageButton
         android:id="@+id/imageButton4"
         android:layout_columnWeight="1"
         android:layout_rowWeight="1"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/entertainment"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
 
     <ImageButton
         android:id="@+id/imageButton5"
         android:layout_columnWeight="1"
         android:layout_rowWeight="1"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/technology"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
 
     <ImageButton
         android:id="@+id/imageButton6"
         android:layout_columnWeight="1"
         android:layout_rowWeight="1"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/music"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp" />
 
     <ImageButton
-        android:id="@+id/imageButton7"
+        android:id="@+id/imageButton3"
         android:layout_columnWeight="1"
         android:layout_rowWeight="1"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:background="@drawable/gaming"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp" />
 
     <ImageButton
         android:id="@+id/imageButton8"
         android:layout_columnWeight="1"
         android:layout_rowWeight="1"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/science"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton7"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        tools:ignore="ContentDescription"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/business"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp" />
 
 </GridLayout>
