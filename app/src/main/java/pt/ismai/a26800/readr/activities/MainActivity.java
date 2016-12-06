@@ -28,11 +28,11 @@ public class MainActivity extends AppCompatActivity
         // creates event handlers for each category button
         goToCategoryListener(1, "general");
         goToCategoryListener(2, "sport");
-        goToCategoryListener(7, "business");
+        goToCategoryListener(3, "business");
         goToCategoryListener(4, "entertainment");
-        goToCategoryListener(6, "music");
-        goToCategoryListener(5, "technology");
-        goToCategoryListener(3, "gaming");
+        goToCategoryListener(5, "music");
+        goToCategoryListener(6, "technology");
+        goToCategoryListener(7, "gaming");
         goToCategoryListener(8, "science-and-nature");
 
         // creates the side navigation drawer

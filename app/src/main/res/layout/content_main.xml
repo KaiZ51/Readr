@@ -41,16 +41,28 @@
         android:layout_marginBottom="5dp" />
 
     <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        tools:ignore="ContentDescription"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:background="@drawable/business"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp" />
+
+    <ImageButton
         android:id="@+id/imageButton4"
         android:layout_columnWeight="1"
         android:layout_rowWeight="1"
         tools:ignore="ContentDescription"
         android:layout_width="60dp"
         android:layout_height="70dp"
-        android:layout_marginRight="5dp"
         android:background="@drawable/entertainment"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp" />
 
     <ImageButton
         android:id="@+id/imageButton5"
@@ -59,10 +71,10 @@
         tools:ignore="ContentDescription"
         android:layout_width="60dp"
         android:layout_height="70dp"
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/technology"
+        android:background="@drawable/music"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp" />
 
     <ImageButton
         android:id="@+id/imageButton6"
@@ -71,34 +83,10 @@
         tools:ignore="ContentDescription"
         android:layout_width="60dp"
         android:layout_height="70dp"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/music"
+        android:background="@drawable/technology"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp" />
-
-    <ImageButton
-        android:id="@+id/imageButton3"
-        android:layout_columnWeight="1"
-        android:layout_rowWeight="1"
-        tools:ignore="ContentDescription"
-        android:layout_width="60dp"
-        android:layout_height="70dp"
-        android:background="@drawable/gaming"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp" />
-
-    <ImageButton
-        android:id="@+id/imageButton8"
-        android:layout_columnWeight="1"
-        android:layout_rowWeight="1"
-        tools:ignore="ContentDescription"
-        android:layout_width="60dp"
-        android:layout_height="70dp"
-        android:layout_marginRight="5dp"
-        android:background="@drawable/science"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp" />
 
     <ImageButton
         android:id="@+id/imageButton7"
@@ -107,9 +95,21 @@
         tools:ignore="ContentDescription"
         android:layout_width="60dp"
         android:layout_height="70dp"
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/business"
+        android:background="@drawable/gaming"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton8"
+        android:layout_columnWeight="1"
+        android:layout_rowWeight="1"
+        tools:ignore="ContentDescription"
+        android:layout_width="60dp"
+        android:layout_height="70dp"
+        android:background="@drawable/science"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp" />
 
 </GridLayout>
