@@ -23,7 +23,7 @@
 
     <string name="notifications_cat">Categories</string>
     <string name="notifications_cat_desc">Choose for which categories you wish to receive notifications.</string>
-    <string-array name="notifications_cat_values">
+    <string-array name="notifications_cat_uivalues">
         <item>General</item>
         <item>Sports</item>
         <item>Business</item>
@@ -33,12 +33,27 @@
         <item>Gaming</item>
         <item>Science And Nature</item>
     </string-array>
+    <string-array name="notifications_cat_entryvalues">
+        <item>general</item>
+        <item>sport</item>
+        <item>business</item>
+        <item>entertainment</item>
+        <item>music</item>
+        <item>technology</item>
+        <item>gaming</item>
+        <item>science-and-nature</item>
+    </string-array>
 
     <string name="notifications_frequency">Checking frequency</string>
     <string name="notifications_frequency_desc">How often to check for new articles.</string>
-    <string-array name="notifications_frequency_values">
+    <string-array name="notifications_frequency_uivalues">
         <item>Half hour</item>
         <item>1 hour</item>
         <item>3 hours</item>
+    </string-array>
+    <string-array name="notifications_frequency_entryvalues">
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
     </string-array>
 </resources>

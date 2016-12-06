@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.HashSet;
+
 import pt.ismai.a26800.readr.R;
 import pt.ismai.a26800.readr.notifications.NotificationAlarm;
 
@@ -71,19 +73,22 @@ public class SettingsActivity extends AppCompatActivity {
 
             if (key.equals("notifications") && sharedPrefs.getBoolean("notifications", false)) {
                 connectionPref.setSummary(R.string.notifications_on);
-                scheduleNotificationsAlarm(true);
+                String[] cats = sharedPrefs.getStringSet("notifications_cat_select", new HashSet<String>())
+                        .toArray(new String[0]);
+                scheduleNotificationsAlarm(true, cats);
             } else if (key.equals("notifications") && !sharedPrefs.getBoolean("notifications", false)) {
                 connectionPref.setSummary(R.string.notifications_off);
-                scheduleNotificationsAlarm(false);
+                scheduleNotificationsAlarm(false, null);
             }
         }
 
-        private void scheduleNotificationsAlarm(boolean state) {
+        private void scheduleNotificationsAlarm(boolean enabled, String[] cats) {
             AlarmManager alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent(getActivity(), NotificationAlarm.class);
+            intent.putExtra("cats", cats);
             PendingIntent alarmIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            if (state) {
+            if (enabled) {
                 alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                         SystemClock.elapsedRealtime() + 10000,
                         300000,

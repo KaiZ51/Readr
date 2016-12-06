@@ -35,7 +35,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         super.add(another);
     }
 
-    public void addAll(List<Articles_Map> others) {
+    public void addAll(List<Articles_Map> others, String category) {
         ArticlesDbHelper mDbHelper = new ArticlesDbHelper(getContext());
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -47,6 +47,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
                 // Create a new map of values, where column names are the keys
                 values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.title);
                 values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE, a.publishedAt.toString());
+                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY, category);
 
                 // Insert the new row, returning the primary key value of the new row
                 db.insert(ArticlesContract.ArticleEntry.TABLE_NAME, null, values);

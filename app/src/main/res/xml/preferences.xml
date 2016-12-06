@@ -15,15 +15,19 @@
             android:title="@string/notifications_toggle_title" />
 
         <MultiSelectListPreference
+            android:defaultValue="@array/notifications_cat_entryvalues"
             android:dependency="notifications"
-            android:entries="@array/notifications_cat_values"
+            android:entries="@array/notifications_cat_uivalues"
+            android:entryValues="@array/notifications_cat_entryvalues"
             android:key="notifications_cat_select"
             android:summary="@string/notifications_cat_desc"
             android:title="@string/notifications_cat" />
 
         <ListPreference
+            android:defaultValue="60"
             android:dependency="notifications"
-            android:entries="@array/notifications_frequency_values"
+            android:entries="@array/notifications_frequency_uivalues"
+            android:entryValues="@array/notifications_frequency_entryvalues"
             android:key="notifications_interval"
             android:summary="@string/notifications_frequency_desc"
             android:title="@string/notifications_frequency" />

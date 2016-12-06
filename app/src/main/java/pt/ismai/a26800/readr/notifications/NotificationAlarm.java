@@ -8,6 +8,7 @@ public class NotificationAlarm extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent i = new Intent(context, NotificationService.class);
+        i.putExtra("cats", intent.getStringArrayExtra("cats"));
         context.startService(i);
     }
 }

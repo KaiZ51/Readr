@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Sources_Content {
     public final String id;
-    private final String category;
+    public final String category;
     private final String language;
     private final String country;
     private final ArrayList<String> sortBysAvailable;

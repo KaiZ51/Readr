@@ -42,67 +42,70 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        // parameters for Sources endpoint
-        String category = "sport";
-        String language = "en";
-        String country = "us";
+        String[] cats = workIntent.getStringArrayExtra("cats");
 
-        // Sources endpoint
-        Sources_Interface client_sources = Retrofit_Service.createService(Sources_Interface.class);
-        Call<Sources_Map> call_sources = client_sources.getData(category, language, country);
+        for (final String category : cats) {
+            // parameters for Sources endpoint
+            String language = "en";
+            String country = "us";
 
-        call_sources.enqueue(new Callback<Sources_Map>() {
-            @Override
-            public void onResponse(Call<Sources_Map> call_sources, Response<Sources_Map> response) {
-                if (response.body() != null) {
-                    final List<Articles_Map> articlesList = new ArrayList<>();
-                    final Comparator<Articles_Map> byPublishedAtComparator =
-                            new Comparator<Articles_Map>() {
-                                @Override
-                                public int compare(Articles_Map o1, Articles_Map o2) {
-                                    if (o1.publishedAt == null) {
-                                        return (o2.publishedAt == null) ? 0 : -1;
-                                    } else if (o2.publishedAt == null) {
-                                        return 1;
+            // Sources endpoint
+            Sources_Interface client_sources = Retrofit_Service.createService(Sources_Interface.class);
+            Call<Sources_Map> call_sources = client_sources.getData(category, language, country);
+
+            call_sources.enqueue(new Callback<Sources_Map>() {
+                @Override
+                public void onResponse(Call<Sources_Map> call_sources, Response<Sources_Map> response) {
+                    if (response.body() != null) {
+                        final List<Articles_Map> articlesList = new ArrayList<>();
+                        final Comparator<Articles_Map> byPublishedAtComparator =
+                                new Comparator<Articles_Map>() {
+                                    @Override
+                                    public int compare(Articles_Map o1, Articles_Map o2) {
+                                        if (o1.publishedAt == null) {
+                                            return (o2.publishedAt == null) ? 0 : -1;
+                                        } else if (o2.publishedAt == null) {
+                                            return 1;
+                                        }
+                                        return o1.publishedAt.compareTo(o2.publishedAt);
                                     }
-                                    return o1.publishedAt.compareTo(o2.publishedAt);
+                                };
+
+                        for (final Sources_Content source : response.body().sources) {
+                            // Articles endpoint
+                            NewsAPI_Interface client = Retrofit_Service.createService(NewsAPI_Interface.class);
+                            Call<NewsAPI_Map> call = client.getData(source.id, "17f8ddef543c4c81a9df2beb60c2a478");
+
+                            call.enqueue(new Callback<NewsAPI_Map>() {
+                                @Override
+                                public void onResponse(Call<NewsAPI_Map> call, Response<NewsAPI_Map> response) {
+                                    if (response.body() != null) {
+                                        articlesList.addAll(response.body().articles);
+                                        Collections.sort(articlesList, byPublishedAtComparator);
+                                        compareWithDb(articlesList.get(articlesList.size() - 1).publishedAt, category);
+                                    }
                                 }
-                            };
 
-                    for (final Sources_Content source : response.body().sources) {
-                        // Articles endpoint
-                        NewsAPI_Interface client = Retrofit_Service.createService(NewsAPI_Interface.class);
-                        Call<NewsAPI_Map> call = client.getData(source.id, "17f8ddef543c4c81a9df2beb60c2a478");
-
-                        call.enqueue(new Callback<NewsAPI_Map>() {
-                            @Override
-                            public void onResponse(Call<NewsAPI_Map> call, Response<NewsAPI_Map> response) {
-                                if (response.body() != null) {
-                                    articlesList.addAll(response.body().articles);
-                                    Collections.sort(articlesList, byPublishedAtComparator);
-                                    compareWithDb(articlesList.get(articlesList.size() - 1).publishedAt);
+                                @Override
+                                public void onFailure(Call<NewsAPI_Map> call, Throwable t) {
+                                    System.out.println("An error ocurred!\n" +
+                                            "URL: " + call.request().url() + "\n" +
+                                            "Cause: " + t.getCause().toString());
                                 }
-                            }
-
-                            @Override
-                            public void onFailure(Call<NewsAPI_Map> call, Throwable t) {
-                                System.out.println("An error ocurred!\n" +
-                                        "URL: " + call.request().url() + "\n" +
-                                        "Cause: " + t.getCause().toString());
-                            }
-                        });
+                            });
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Sources_Map> call_sources, Throwable t) {
-                System.out.println("An error ocurred!");
-            }
-        });
+                @Override
+                public void onFailure(Call<Sources_Map> call_sources, Throwable t) {
+                    System.out.println("An error ocurred!");
+                }
+            });
+        }
     }
 
-    private void compareWithDb(Date apiDate) {
+    private void compareWithDb(Date apiDate, String category) {
         ArticlesDbHelper mDbHelper = new ArticlesDbHelper(this);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -111,12 +114,13 @@ public class NotificationService extends IntentService {
         String[] projection = {
                 ArticlesContract.ArticleEntry._ID,
                 ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE,
-                ArticlesContract.ArticleEntry.COLUMN_NAME_DATE
+                ArticlesContract.ArticleEntry.COLUMN_NAME_DATE,
+                ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY
         };
 
         // Filter results WHERE "title" = 'My Title'
-        String selection = ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE + " = ?";
-        String[] selectionArgs = {"My Title"};
+        String selection = ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY + " = ?";
+        String[] selectionArgs = {category};
 
         // How you want the results sorted in the resulting Cursor
         String sortOrder = ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + " DESC";
@@ -124,8 +128,8 @@ public class NotificationService extends IntentService {
         Cursor c = db.query(
                 ArticlesContract.ArticleEntry.TABLE_NAME,   // The table to query
                 projection,                                 // The columns to return
-                null,                                       // The columns for the WHERE clause
-                null,                                       // The values for the WHERE clause
+                selection,                                  // The columns for the WHERE clause
+                selectionArgs,                              // The values for the WHERE clause
                 null,                                       // don't group the rows
                 null,                                       // don't filter by row groups
                 sortOrder                                   // The sort order
@@ -133,9 +137,6 @@ public class NotificationService extends IntentService {
 
         if (c.getCount() > 0) {
             c.moveToFirst();
-
-            long itemId = c.getLong(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry._ID));
-            String itemValue = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE));
 
             Date itemDate = new Date();
             DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
@@ -147,7 +148,7 @@ public class NotificationService extends IntentService {
             }
 
             if (itemDate.before(apiDate) && !itemDate.equals(apiDate)) {
-                System.out.println("yes");
+                System.out.println("yes on date comparison");
 
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_general)
@@ -176,7 +177,7 @@ public class NotificationService extends IntentService {
                 mNotificationManager.notify(50, mBuilder.build());
             }
         } else {
-            System.out.println("no");
+            System.out.println("cursor is empty");
         }
 
         c.close();

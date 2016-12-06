@@ -11,7 +11,8 @@ public class ArticlesDbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + ArticlesContract.ArticleEntry.TABLE_NAME + " (" +
                     ArticlesContract.ArticleEntry._ID + " INTEGER PRIMARY KEY," +
                     ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
-                    ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + TEXT_TYPE + " )";
+                    ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + TEXT_TYPE + COMMA_SEP +
+                    ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY + TEXT_TYPE + " )";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + ArticlesContract.ArticleEntry.TABLE_NAME;

@@ -119,7 +119,7 @@ public class ListNewsActivity extends AppCompatActivity
                                     }*/
 
                                     ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
-                                    nAdapter.addAll(response.body().articles);
+                                    nAdapter.addAll(response.body().articles, source.category);
 
                                     /*System.out.println("Source ID: " + source.id + "\n" +
                                             "Adapter count: " + nAdapter.getCount() + "\n" +
