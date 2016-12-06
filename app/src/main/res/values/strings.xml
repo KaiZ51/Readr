@@ -50,10 +50,12 @@
         <item>Half hour</item>
         <item>1 hour</item>
         <item>3 hours</item>
+        <item>6 hours</item>
     </string-array>
     <string-array name="notifications_frequency_entryvalues">
         <item>30</item>
         <item>60</item>
         <item>180</item>
+        <item>360</item>
     </string-array>
 </resources>

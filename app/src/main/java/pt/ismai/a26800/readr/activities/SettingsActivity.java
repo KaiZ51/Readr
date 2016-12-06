@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 import pt.ismai.a26800.readr.R;
 import pt.ismai.a26800.readr.notifications.NotificationAlarm;
@@ -75,14 +76,25 @@ public class SettingsActivity extends AppCompatActivity {
                 connectionPref.setSummary(R.string.notifications_on);
                 String[] cats = sharedPrefs.getStringSet("notifications_cat_select", new HashSet<String>())
                         .toArray(new String[0]);
-                scheduleNotificationsAlarm(true, cats);
+                long intervalValue = Long.parseLong(sharedPrefs.getString("notifications_interval", ""));
+                long interval = TimeUnit.MINUTES.toMillis(intervalValue);
+                scheduleNotificationsAlarm(true, cats, interval);
             } else if (key.equals("notifications") && !sharedPrefs.getBoolean("notifications", false)) {
                 connectionPref.setSummary(R.string.notifications_off);
-                scheduleNotificationsAlarm(false, null);
+                scheduleNotificationsAlarm(false, null, 0);
+            }
+
+            if (key.equals("notifications_cat_select") || key.equals("notifications_interval")) {
+                String[] cats = sharedPrefs.getStringSet("notifications_cat_select", new HashSet<String>())
+                        .toArray(new String[0]);
+                long intervalValue = Long.parseLong(sharedPrefs.getString("notifications_interval", ""));
+                long interval = TimeUnit.MINUTES.toMillis(intervalValue);
+                scheduleNotificationsAlarm(false, null, 0);
+                scheduleNotificationsAlarm(true, cats, interval);
             }
         }
 
-        private void scheduleNotificationsAlarm(boolean enabled, String[] cats) {
+        private void scheduleNotificationsAlarm(boolean enabled, String[] cats, long interval) {
             AlarmManager alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent(getActivity(), NotificationAlarm.class);
             intent.putExtra("cats", cats);
@@ -90,8 +102,8 @@ public class SettingsActivity extends AppCompatActivity {
 
             if (enabled) {
                 alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                        SystemClock.elapsedRealtime() + 10000,
-                        300000,
+                        SystemClock.elapsedRealtime() + interval,
+                        interval,
                         alarmIntent);
                 System.out.println("alarm on");
             } else {
