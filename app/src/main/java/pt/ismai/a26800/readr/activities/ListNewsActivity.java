@@ -2,9 +2,12 @@ package pt.ismai.a26800.readr.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +34,7 @@ public class ListNewsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_news);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -51,27 +55,36 @@ public class ListNewsActivity extends AppCompatActivity
         switch (category) {
             case "general":
                 setTitle(R.string.cat_general);
+                toolbarLayout.setBackground(getDrawable(R.drawable.general_toolbar));
                 break;
             case "sport":
                 setTitle(R.string.cat_sports);
+                toolbarLayout.setBackground(getDrawable(R.drawable.sports_toolbar));
                 break;
             case "business":
                 setTitle(R.string.cat_business);
+                toolbarLayout.setBackground(getDrawable(R.drawable.business_toolbar));
                 break;
             case "entertainment":
                 setTitle(R.string.cat_entertainment);
+                toolbarLayout.setBackground(getDrawable(R.drawable.entertainment_toolbar));
                 break;
             case "music":
                 setTitle(R.string.cat_music);
+                toolbarLayout.setBackground(getDrawable(R.drawable.music_toolbar));
+
                 break;
             case "technology":
                 setTitle(R.string.cat_technology);
+                toolbarLayout.setBackground(getDrawable(R.drawable.technology_toolbar));
                 break;
             case "gaming":
                 setTitle(R.string.cat_gaming);
+                toolbarLayout.setBackground(getDrawable(R.drawable.gaming_toolbar));
                 break;
             case "science-and-nature":
                 setTitle(R.string.cat_science_and_nature);
+                toolbarLayout.setBackground(getDrawable(R.drawable.science_toolbar));
                 break;
         }
 
