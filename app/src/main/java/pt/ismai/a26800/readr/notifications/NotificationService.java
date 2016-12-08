@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -154,7 +155,9 @@ public class NotificationService extends IntentService {
                         .setSmallIcon(R.drawable.ic_general)
                         .setContentTitle("There are new articles available!")
                         .setContentText("Touch this notification to open the app.")
-                        .setAutoCancel(true);
+                        .setAutoCancel(true)
+                        .setVibrate(new long[]{1000, 1000})
+                        .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
 
                 // Creates an explicit intent for an Activity in your app
                 Intent resultIntent = new Intent(this, MainActivity.class);

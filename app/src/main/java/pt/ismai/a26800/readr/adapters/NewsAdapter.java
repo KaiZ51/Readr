@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         for (Articles_Map a : others) {
             this.doAdd(a);
 
-            if (a.publishedAt != null) {
+            if (a.publishedAt != null && !checkExists(a.title, category)) {
                 // Create a new map of values, where column names are the keys
                 values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.title);
                 values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE, a.publishedAt.toString());
@@ -68,6 +69,43 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
                     return o1.publishedAt.compareTo(o2.publishedAt);
                 }
             };
+
+    private boolean checkExists(String title, String category) {
+        ArticlesDbHelper mDbHelper = new ArticlesDbHelper(getContext());
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                ArticlesContract.ArticleEntry._ID,
+                ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE,
+                ArticlesContract.ArticleEntry.COLUMN_NAME_DATE,
+                ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY
+        };
+
+        // Filter results WHERE "title" = 'My Title'
+        String selection = ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE + " = ? " +
+                "AND " + ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY + " = ?";
+        String[] selectionArgs = {title, category};
+
+        Cursor c = db.query(
+                ArticlesContract.ArticleEntry.TABLE_NAME,   // The table to query
+                projection,                                 // The columns to return
+                selection,                                  // The columns for the WHERE clause
+                selectionArgs,                              // The values for the WHERE clause
+                null,                                       // don't group the rows
+                null,                                       // don't filter by row groups
+                null                                        // The sort order
+        );
+
+        if (c.getCount() > 0) {
+            c.close();
+            return true;
+        } else {
+            c.close();
+            return false;
+        }
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
