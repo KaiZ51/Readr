@@ -1,6 +1,9 @@
 package pt.ismai.a26800.readr.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import android.webkit.WebViewClient;
 import pt.ismai.a26800.readr.R;
 
 public class ShowArticleActivity extends AppCompatActivity {
+    String url;
     boolean immersiveCheck = false;
 
     @Override
@@ -24,8 +28,7 @@ public class ShowArticleActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String url = getIntent().getStringExtra("url");
-
+        url = getIntent().getStringExtra("url");
         final SwipeRefreshLayout srLayout = (SwipeRefreshLayout) findViewById(R.id.sr_layout);
         final WebView wv = (WebView) findViewById(R.id.wv_url);
         //getSupportActionBar().setHideOnContentScrollEnabled(true);
@@ -51,43 +54,50 @@ public class ShowArticleActivity extends AppCompatActivity {
         });
         wv.loadUrl(url);
 
-        View decorView = getWindow().getDecorView();
-        decorView.setOnSystemUiVisibilityChangeListener
-                (new View.OnSystemUiVisibilityChangeListener() {
-                    @Override
-                    public void onSystemUiVisibilityChange(int visibility) {
-                        // Note that system bars will only be "visible" if none of the
-                        // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
-                        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                            // TODO: The system bars are visible. Make any desired
-                            // adjustments to your UI, such as showing the action bar or
-                            // other navigational controls.
-                            exitImmersive();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            View decorView = getWindow().getDecorView();
+            decorView.setOnSystemUiVisibilityChangeListener
+                    (new View.OnSystemUiVisibilityChangeListener() {
+                        @Override
+                        public void onSystemUiVisibilityChange(int visibility) {
+                            // Note that system bars will only be "visible" if none of the
+                            // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+                            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                                // TODO: The system bars are visible. Make any desired
+                                // adjustments to your UI, such as showing the action bar or
+                                // other navigational controls.
+                                exitImmersive();
 
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (immersiveCheck) {
-                                        // enter immersive mode after 3 seconds
-                                        enterImmersive();
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (immersiveCheck) {
+                                            // enter immersive mode after 3 seconds
+                                            enterImmersive();
+                                        }
                                     }
-                                }
-                            }, 3000);
-                        } else {
-                            // TODO: The system bars are NOT visible. Make any desired
-                            // adjustments to your UI, such as hiding the action bar or
-                            // other navigational controls.
+                                }, 3000);
+                            } else {
+                                // TODO: The system bars are NOT visible. Make any desired
+                                // adjustments to your UI, such as hiding the action bar or
+                                // other navigational controls.
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_show_article, menu);
-        return true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getMenuInflater().inflate(R.menu.menu_show_article, menu);
+            return true;
+        } else {
+            getMenuInflater().inflate(R.menu.menu_show_article_backwards, menu);
+            return true;
+        }
     }
 
     @Override
@@ -118,9 +128,15 @@ public class ShowArticleActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+        if (id == R.id.action_openbrowser) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("InlinedApi")
     public void enterImmersive() {
         View decorView = getWindow().getDecorView();
 

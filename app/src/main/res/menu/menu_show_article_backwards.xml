@@ -4,21 +4,9 @@
     tools:context="pt.ismai.a26800.readr.activities.ShowArticleActivity">
 
     <item
-        android:id="@+id/action_fullscreen"
-        android:icon="@drawable/ic_fullscreen"
-        android:title="@string/fullscreen"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_openbrowser"
-        android:orderInCategory="150"
-        android:title="@string/action_openbrowser"
         app:showAsAction="never" />
 
 </menu>

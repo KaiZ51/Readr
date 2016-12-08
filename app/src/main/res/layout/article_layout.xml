@@ -11,13 +11,15 @@
         android:id="@+id/thumbnail"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginEnd="15dp" />
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/thumbnail"
+        android:layout_toRightOf="@id/thumbnail"
         android:ellipsize="end"
         android:maxLines="1"
         android:textStyle="bold" />
@@ -29,6 +31,7 @@
         android:layout_alignBottom="@id/thumbnail"
         android:layout_below="@id/title"
         android:layout_toEndOf="@id/thumbnail"
+        android:layout_toRightOf="@id/thumbnail"
         android:ellipsize="end"
         android:gravity="bottom"
         android:maxLines="2" />
