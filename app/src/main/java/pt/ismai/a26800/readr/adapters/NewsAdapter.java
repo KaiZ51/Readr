@@ -47,12 +47,20 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
             if (a.publishedAt != null && !checkExists(a.title, category)) {
                 // Create a new map of values, where column names are the keys
                 values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.title);
+                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION, a.description);
                 values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE, a.publishedAt.toString());
                 values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY, category);
 
                 // Insert the new row, returning the primary key value of the new row
                 db.insert(ArticlesContract.ArticleEntry.TABLE_NAME, null, values);
             }
+        }
+        this.sort(byPublishedAtComparator);
+    }
+
+    public void addAll(List<Articles_Map> articles) {
+        for (Articles_Map a : articles) {
+            this.doAdd(a);
         }
         this.sort(byPublishedAtComparator);
     }
