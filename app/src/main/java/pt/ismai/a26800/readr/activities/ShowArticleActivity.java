@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,9 +17,11 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+
 import pt.ismai.a26800.readr.R;
 
 public class ShowArticleActivity extends AppCompatActivity {
+    private ShareActionProvider mShareActionProvider;
     String url;
     boolean immersiveCheck = false;
 
@@ -93,9 +97,37 @@ public class ShowArticleActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getMenuInflater().inflate(R.menu.menu_show_article, menu);
+
+            // Locate MenuItem with ShareActionProvider
+            MenuItem item = menu.findItem(R.id.action_share);
+
+            // Fetch and store ShareActionProvider
+            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+            sendIntent.setType("text/plain");
+
+            setShareIntent(Intent.createChooser(sendIntent, getResources().getString(R.string.share_title)));
+
             return true;
         } else {
             getMenuInflater().inflate(R.menu.menu_show_article_backwards, menu);
+
+            // Locate MenuItem with ShareActionProvider
+            MenuItem item = menu.findItem(R.id.action_share);
+
+            // Fetch and store ShareActionProvider
+            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+            sendIntent.setType("text/plain");
+
+            setShareIntent(Intent.createChooser(sendIntent, getResources().getString(R.string.share_title)));
+
             return true;
         }
     }
@@ -134,6 +166,13 @@ public class ShowArticleActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Call to update the share intent
+    private void setShareIntent(Intent shareIntent) {
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
     }
 
     @SuppressLint("InlinedApi")
