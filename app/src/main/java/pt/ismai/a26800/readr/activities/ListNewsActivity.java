@@ -1,6 +1,7 @@
 package pt.ismai.a26800.readr.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -138,11 +140,11 @@ public class ListNewsActivity extends AppCompatActivity
                                 R.layout.article_layout);
 
                         for (final Sources_Content source : response.body().sources) {
-                        /*System.out.println("ID: " + source.id + "\n" +
-                                "Category: " + source.category + "\n" +
-                                "Language: " + source.language + "\n" +
-                                "Country: " + source.country + "\n" +
-                                "Array: " + source.sortBysAvailable + "\n \n");*/
+                            /*System.out.println("ID: " + source.id + "\n" +
+                                    "Category: " + source.category + "\n" +
+                                    "Language: " + source.language + "\n" +
+                                    "Country: " + source.country + "\n" +
+                                    "Array: " + source.sortBysAvailable + "\n \n");*/
 
                             // Articles endpoint
                             NewsAPI_Interface client = Retrofit_Service.createService(NewsAPI_Interface.class);
@@ -152,31 +154,27 @@ public class ListNewsActivity extends AppCompatActivity
                                 @Override
                                 public void onResponse(Call<NewsAPI_Map> call, Response<NewsAPI_Map> response) {
                                     if (response.body() != null) {
-                                    /*System.out.println("Status: " + response.body().status + "\n" +
-                                            "News source: " + response.body().source + "\n" +
-                                            "Articles_Map object: " + response.body().articles + "\n \n");*/
+                                        /*System.out.println("Status: " + response.body().status + "\n" +
+                                                "News source: " + response.body().source + "\n" +
+                                                "Articles_Map object: " + response.body().articles + "\n \n");*/
 
-                                    /*for (Articles_Map article : response.body().articles) {
-                                        System.out.println("Title: " + article.title + "\n" +
-                                                "Description: " + article.description + "\n" +
-                                                "Date: " + article.publishedAt + "\n");
-                                    }*/
+                                        /*for (Articles_Map article : response.body().articles) {
+                                            System.out.println("Title: " + article.title + "\n" +
+                                                    "Description: " + article.description + "\n" +
+                                                    "Date: " + article.publishedAt + "\n");
+                                        }*/
 
-                                        ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
                                         nAdapter.addAll(response.body().articles, source.category);
 
-                                    /*System.out.println("Source ID: " + source.id + "\n" +
-                                            "Adapter count: " + nAdapter.getCount() + "\n" +
-                                            "Response body: " + response.body().articles + "\n" +
-                                            "Articles count: " + nAdapter.getCount() + "\n");*/
+                                        /*System.out.println("Source ID: " + source.id + "\n" +
+                                                "Adapter count: " + nAdapter.getCount() + "\n" +
+                                                "Response body: " + response.body().articles + "\n" +
+                                                "Articles count: " + nAdapter.getCount() + "\n");*/
 
-                                    /*for (int i = 0; i < nAdapter.getCount(); i++) {
-                                        System.out.println("Source ID: " + source.id + "\n" +
-                                                "Adapter content: " + nAdapter.getItem(i).publishedAt);
-                                    }*/
-
-                                        gv_content.setAdapter(nAdapter);
-                                        gv_content.setExpanded(true);
+                                        /*for (int i = 0; i < nAdapter.getCount(); i++) {
+                                            System.out.println("Source ID: " + source.id + "\n" +
+                                                    "Adapter content: " + nAdapter.getItem(i).publishedAt);
+                                        }*/
                                     }
                                 }
 
@@ -188,6 +186,10 @@ public class ListNewsActivity extends AppCompatActivity
                                 }
                             });
                         }
+
+                        ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
+                        gv_content.setAdapter(nAdapter);
+                        gv_content.setExpanded(true);
                     }
                 }
 
@@ -206,6 +208,8 @@ public class ListNewsActivity extends AppCompatActivity
                     ArticlesContract.ArticleEntry._ID,
                     ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE,
                     ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION,
+                    ArticlesContract.ArticleEntry.COLUMN_NAME_URL,
+                    ArticlesContract.ArticleEntry.COLUMN_NAME_URLTOIMAGE,
                     ArticlesContract.ArticleEntry.COLUMN_NAME_DATE,
                     ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY
             };
@@ -234,6 +238,8 @@ public class ListNewsActivity extends AppCompatActivity
                 while (c.moveToNext()) {
                     String title = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE));
                     String description = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION));
+                    String url = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_URL));
+                    String urlToImage = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_URLTOIMAGE));
 
                     Date date = new Date();
                     DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
@@ -244,7 +250,7 @@ public class ListNewsActivity extends AppCompatActivity
                         e.printStackTrace();
                     }
 
-                    Articles_Map article = new Articles_Map(title, description, date);
+                    Articles_Map article = new Articles_Map(title, description, url, urlToImage, date);
                     articles.add(article);
                 }
 
@@ -254,7 +260,27 @@ public class ListNewsActivity extends AppCompatActivity
                 gv_content.setAdapter(nAdapter);
                 gv_content.setExpanded(true);
             } else {
-                System.out.println("cursor is empty");
+                // Use the Builder class for convenient dialog construction
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                final Intent i = new Intent(ListNewsActivity.this, MainActivity.class);
+
+                builder.setTitle(R.string.noarticles_title)
+                        .setMessage(R.string.noarticles_desc)
+                        .setPositiveButton(R.string.noarticles_back, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                startActivity(i);
+                            }
+                        })
+                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialogInterface) {
+                                startActivity(i);
+                            }
+                        });
+
+                // Create the AlertDialog object and show it
+                builder.create();
+                builder.show();
             }
 
             c.close();

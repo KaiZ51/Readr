@@ -3,9 +3,13 @@ package pt.ismai.a26800.readr.adapters;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,19 +46,29 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         ContentValues values = new ContentValues();
 
         for (Articles_Map a : others) {
-            this.doAdd(a);
+            if (a.title != null &&
+                    a.description != null &&
+                    a.description.trim().length() > 0 &&
+                    a.url != null &&
+                    a.urlToImage != null &&
+                    a.publishedAt != null) {
+                this.doAdd(a);
 
-            if (a.publishedAt != null && !checkExists(a.title, category)) {
-                // Create a new map of values, where column names are the keys
-                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.title);
-                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION, a.description);
-                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE, a.publishedAt.toString());
-                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY, category);
+                if (!checkExistsDb(db, a.title, category)) {
+                    // Create a new map of values, where column names are the keys
+                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.title);
+                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION, a.description);
+                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_URL, a.url);
+                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_URLTOIMAGE, a.urlToImage);
+                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE, a.publishedAt.toString());
+                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY, category);
 
-                // Insert the new row, returning the primary key value of the new row
-                db.insert(ArticlesContract.ArticleEntry.TABLE_NAME, null, values);
+                    // Insert the new row, returning the primary key value of the new row
+                    db.insert(ArticlesContract.ArticleEntry.TABLE_NAME, null, values);
+                }
             }
         }
+        mDbHelper.close();
         this.sort(byPublishedAtComparator);
     }
 
@@ -74,13 +88,13 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
                     } else if (o2.publishedAt == null) {
                         return 1;
                     }
-                    return o1.publishedAt.compareTo(o2.publishedAt);
+                    return o2.publishedAt.compareTo(o1.publishedAt);
                 }
             };
 
-    private boolean checkExists(String title, String category) {
-        ArticlesDbHelper mDbHelper = new ArticlesDbHelper(getContext());
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+    private boolean checkExistsDb(SQLiteDatabase db, String title, String category) {
+        /*ArticlesDbHelper mDbHelper = new ArticlesDbHelper(getContext());
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();*/
 
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
@@ -107,10 +121,10 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         );
 
         if (c.getCount() > 0) {
-            c.close();
+            //c.close();
             return true;
         } else {
-            c.close();
+            //c.close();
             return false;
         }
     }
@@ -127,9 +141,29 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ShowArticleActivity.class);
-                intent.putExtra("url", article.url);
-                mContext.startActivity(intent);
+                ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+                if (activeNetwork != null && activeNetwork.isConnected()) {
+                    Intent intent = new Intent(mContext, ShowArticleActivity.class);
+                    intent.putExtra("url", article.url);
+                    mContext.startActivity(intent);
+                } else {
+                    // Use the Builder class for convenient dialog construction
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                    builder.setTitle(R.string.noconnection_title)
+                            .setMessage(R.string.noconnection_desc)
+                            .setPositiveButton(R.string.noconnection_close, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+
+                    // Create the AlertDialog object and show it
+                    builder.create();
+                    builder.show();
+                }
             }
         });
 

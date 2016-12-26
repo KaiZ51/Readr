@@ -13,6 +13,8 @@ public final class ArticlesContract {
         public static final String TABLE_NAME = "articles";
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_DESCRIPTION = "description";
+        public static final String COLUMN_NAME_URL = "url";
+        public static final String COLUMN_NAME_URLTOIMAGE = "urlToImage";
         public static final String COLUMN_NAME_DATE = "date";
         public static final String COLUMN_NAME_CATEGORY = "category";
     }

@@ -12,6 +12,8 @@ public class ArticlesDbHelper extends SQLiteOpenHelper {
                     ArticlesContract.ArticleEntry._ID + " INTEGER PRIMARY KEY," +
                     ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
                     ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+                    ArticlesContract.ArticleEntry.COLUMN_NAME_URL + TEXT_TYPE + COMMA_SEP +
+                    ArticlesContract.ArticleEntry.COLUMN_NAME_URLTOIMAGE + TEXT_TYPE + COMMA_SEP +
                     ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + TEXT_TYPE + COMMA_SEP +
                     ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY + TEXT_TYPE + " )";
 

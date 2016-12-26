@@ -2,6 +2,14 @@
     <string name="app_name">Readr</string>
     <string name="categories">Categories</string>
 
+    <string name="noarticles_title">No articles found.</string>
+    <string name="noarticles_desc">No articles have been previously loaded for this category.</string>
+    <string name="noarticles_back">Back to main menu</string>
+
+    <string name="noconnection_title">No Internet connection available.</string>
+    <string name="noconnection_desc">Currently, your device isn\'t connected to the Internet, and as such the article can\'t be shown.</string>
+    <string name="noconnection_close">Close</string>
+
     <string name="action_share">Share</string>
     <string name="share_title">Share article with...</string>
     <string name="fullscreen">Fullscreen</string>
