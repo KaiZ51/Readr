@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         ArticlesDbHelper mDbHelper = new ArticlesDbHelper(getContext());
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
+        Date comparisonDate = new Date(0);
 
         for (Articles_Map a : others) {
             if (a.title != null &&
@@ -52,7 +54,8 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
                     a.description.trim().length() > 0 &&
                     a.url != null &&
                     a.urlToImage != null &&
-                    a.publishedAt != null) {
+                    a.publishedAt != null &&
+                    a.publishedAt.after(comparisonDate)) {
                 this.doAdd(a);
 
                 if (!checkExistsDb(db, a.title, category)) {
@@ -174,7 +177,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
 
         Picasso.with(mContext).load(article.urlToImage).fit().centerCrop().into(thumbnail);
         title.setText(article.title);
-        description.setText(article.description);
+        description.setText(article.publishedAt.toString());
 
         return view;
     }
