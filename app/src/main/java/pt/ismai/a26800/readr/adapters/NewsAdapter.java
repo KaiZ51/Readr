@@ -177,7 +177,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
 
         Picasso.with(mContext).load(article.urlToImage).fit().centerCrop().into(thumbnail);
         title.setText(article.title);
-        description.setText(article.publishedAt.toString());
+        description.setText(article.description);
 
         return view;
     }
