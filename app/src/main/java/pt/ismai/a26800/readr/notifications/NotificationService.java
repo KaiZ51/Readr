@@ -48,11 +48,10 @@ public class NotificationService extends IntentService {
         for (final String category : cats) {
             // parameters for Sources endpoint
             String language = "en";
-            String country = "us";
 
             // Sources endpoint
             Sources_Interface client_sources = Retrofit_Service.createService(Sources_Interface.class);
-            Call<Sources_Map> call_sources = client_sources.getData(category, language, country);
+            Call<Sources_Map> call_sources = client_sources.getData(category, language);
 
             call_sources.enqueue(new Callback<Sources_Map>() {
                 @Override

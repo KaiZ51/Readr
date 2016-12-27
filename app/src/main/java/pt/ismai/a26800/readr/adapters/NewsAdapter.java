@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 import pt.ismai.a26800.readr.activities.ShowArticleActivity;
@@ -40,7 +41,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         super.add(another);
     }
 
-    public void addAll(List<Articles_Map> others, String category) {
+    public void addAll(HashSet<Articles_Map> others, String category) {
         ArticlesDbHelper mDbHelper = new ArticlesDbHelper(getContext());
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();

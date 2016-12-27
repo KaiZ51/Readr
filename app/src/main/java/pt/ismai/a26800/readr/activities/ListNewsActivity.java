@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -125,27 +126,21 @@ public class ListNewsActivity extends AppCompatActivity
 
             // parameters for Sources endpoint
             String language = "en";
-            String country = "us";
 
             // Sources endpoint
             Sources_Interface client_sources = Retrofit_Service.createService(Sources_Interface.class);
-            Call<Sources_Map> call_sources = client_sources.getData(category, language, country);
+            Call<Sources_Map> call_sources = client_sources.getData(category, language);
 
             call_sources.enqueue(new Callback<Sources_Map>() {
                 @Override
                 public void onResponse(Call<Sources_Map> call_sources, Response<Sources_Map> response) {
                     if (response.body() != null) {
-                        //System.out.println("Content here: " + response.body().sources);
                         final NewsAdapter nAdapter = new NewsAdapter(ListNewsActivity.this,
                                 R.layout.article_layout);
+                        final HashSet<Articles_Map> articlesSet = new HashSet<>();
+                        final ArrayList<Sources_Content> sources = response.body().sources;
 
                         for (final Sources_Content source : response.body().sources) {
-                            /*System.out.println("ID: " + source.id + "\n" +
-                                    "Category: " + source.category + "\n" +
-                                    "Language: " + source.language + "\n" +
-                                    "Country: " + source.country + "\n" +
-                                    "Array: " + source.sortBysAvailable + "\n \n");*/
-
                             // Articles endpoint
                             NewsAPI_Interface client = Retrofit_Service.createService(NewsAPI_Interface.class);
                             Call<NewsAPI_Map> call = client.getData(source.id, "17f8ddef543c4c81a9df2beb60c2a478");
@@ -154,27 +149,15 @@ public class ListNewsActivity extends AppCompatActivity
                                 @Override
                                 public void onResponse(Call<NewsAPI_Map> call, Response<NewsAPI_Map> response) {
                                     if (response.body() != null) {
-                                        /*System.out.println("Status: " + response.body().status + "\n" +
-                                                "News source: " + response.body().source + "\n" +
-                                                "Articles_Map object: " + response.body().articles + "\n \n");*/
-
-                                        /*for (Articles_Map article : response.body().articles) {
-                                            System.out.println("Title: " + article.title + "\n" +
-                                                    "Description: " + article.description + "\n" +
-                                                    "Date: " + article.publishedAt + "\n");
-                                        }*/
-
-                                        nAdapter.addAll(response.body().articles, source.category);
-
-                                        /*System.out.println("Source ID: " + source.id + "\n" +
-                                                "Adapter count: " + nAdapter.getCount() + "\n" +
-                                                "Response body: " + response.body().articles + "\n" +
-                                                "Articles count: " + nAdapter.getCount() + "\n");*/
-
-                                        /*for (int i = 0; i < nAdapter.getCount(); i++) {
-                                            System.out.println("Source ID: " + source.id + "\n" +
-                                                    "Adapter content: " + nAdapter.getItem(i).publishedAt);
-                                        }*/
+                                        // if source is the last one, add all articles from the HashSet to the NewsAdapter.
+                                        if (source.id.equals(sources.get(sources.size() - 1).id)) {
+                                            articlesSet.addAll(response.body().articles);
+                                            nAdapter.addAll(articlesSet, source.category);
+                                        }
+                                        // if not, then just add articles from this source to the HashSet.
+                                        else {
+                                            articlesSet.addAll(response.body().articles);
+                                        }
                                     }
                                 }
 
