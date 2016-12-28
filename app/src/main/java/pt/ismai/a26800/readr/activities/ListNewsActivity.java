@@ -13,6 +13,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -80,7 +81,7 @@ public class ListNewsActivity extends AppCompatActivity
         });
 
         // content shown is based on the category selected on the previous activity
-        String category = getIntent().getStringExtra("category");
+        final String category = getIntent().getStringExtra("category");
 
         switch (category) {
             case "general":
@@ -117,6 +118,52 @@ public class ListNewsActivity extends AppCompatActivity
                 break;
         }
 
+        SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipelayout);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData(category);
+            }
+        });
+
+        loadData(category);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_general) {
+            goToCategory("general");
+        } else if (id == R.id.nav_sports) {
+            goToCategory("sport");
+        } else if (id == R.id.nav_business) {
+            goToCategory("business");
+        } else if (id == R.id.nav_entertainment) {
+            goToCategory("entertainment");
+        } else if (id == R.id.nav_music) {
+            goToCategory("music");
+        } else if (id == R.id.nav_technology) {
+            goToCategory("technology");
+        } else if (id == R.id.nav_gaming) {
+            goToCategory("gaming");
+        } else if (id == R.id.nav_science_and_nature) {
+            goToCategory("science-and-nature");
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.nav_drawer);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void goToCategory(String category) {
+        Intent intent = new Intent(ListNewsActivity.this, ListNewsActivity.class);
+        intent.putExtra("category", category);
+        startActivity(intent);
+    }
+
+    private void loadData(String category) {
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
@@ -173,6 +220,9 @@ public class ListNewsActivity extends AppCompatActivity
                         ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
                         gv_content.setAdapter(nAdapter);
                         gv_content.setExpanded(true);
+
+                        SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipelayout);
+                        swipeLayout.setRefreshing(false);
                     }
                 }
 
@@ -244,6 +294,9 @@ public class ListNewsActivity extends AppCompatActivity
                 ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
                 gv_content.setAdapter(nAdapter);
                 gv_content.setExpanded(true);
+
+                SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipelayout);
+                swipeLayout.setRefreshing(false);
             } else {
                 // Use the Builder class for convenient dialog construction
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -269,40 +322,7 @@ public class ListNewsActivity extends AppCompatActivity
             }
 
             c.close();
+            mDbHelper.close();
         }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_general) {
-            goToCategory("general");
-        } else if (id == R.id.nav_sports) {
-            goToCategory("sport");
-        } else if (id == R.id.nav_business) {
-            goToCategory("business");
-        } else if (id == R.id.nav_entertainment) {
-            goToCategory("entertainment");
-        } else if (id == R.id.nav_music) {
-            goToCategory("music");
-        } else if (id == R.id.nav_technology) {
-            goToCategory("technology");
-        } else if (id == R.id.nav_gaming) {
-            goToCategory("gaming");
-        } else if (id == R.id.nav_science_and_nature) {
-            goToCategory("science-and-nature");
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.nav_drawer);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    private void goToCategory(String category) {
-        Intent intent = new Intent(ListNewsActivity.this, ListNewsActivity.class);
-        intent.putExtra("category", category);
-        startActivity(intent);
     }
 }
