@@ -58,7 +58,9 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
                     a.publishedAt.after(comparisonDate)) {
                 this.doAdd(a);
 
-                if (!checkExistsDb(db, a.title, category)) {
+                if (!checkExistsDb(db, a.title, a.publishedAt.toString(), category)) {
+                    //System.out.println(a.title + " doesnt exist");
+
                     // Create a new map of values, where column names are the keys
                     values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.title);
                     values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION, a.description);
@@ -96,7 +98,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
                 }
             };
 
-    private boolean checkExistsDb(SQLiteDatabase db, String title, String category) {
+    private boolean checkExistsDb(SQLiteDatabase db, String title, String date, String category) {
         /*ArticlesDbHelper mDbHelper = new ArticlesDbHelper(getContext());
         SQLiteDatabase db = mDbHelper.getReadableDatabase();*/
 
@@ -111,8 +113,9 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
 
         // Filter results WHERE "title" = 'My Title'
         String selection = ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE + " = ? " +
+                "AND " + ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + " = ? " +
                 "AND " + ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY + " = ?";
-        String[] selectionArgs = {title, category};
+        String[] selectionArgs = {title, date, category};
 
         Cursor c = db.query(
                 ArticlesContract.ArticleEntry.TABLE_NAME,   // The table to query
@@ -124,11 +127,11 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
                 null                                        // The sort order
         );
 
-        if (c.getCount() > 0) {
-            //c.close();
+        if (c.moveToFirst()) {
+            c.close();
             return true;
         } else {
-            //c.close();
+            c.close();
             return false;
         }
     }

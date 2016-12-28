@@ -119,8 +119,8 @@ public class ListNewsActivity extends AppCompatActivity
 
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        //boolean isConnected = activeNetwork != null && activeNetwork.isConnected();
 
+        // if internet connection is available
         if (activeNetwork != null && activeNetwork.isConnected()) {
             // Retrofit implementation
 
@@ -178,10 +178,12 @@ public class ListNewsActivity extends AppCompatActivity
 
                 @Override
                 public void onFailure(Call<Sources_Map> call_sources, Throwable t) {
-                    System.out.println("An error ocurred!");
+                    System.out.println("There was a problem with loading source data from the API.");
                 }
             });
-        } else {
+        }
+        // if internet connection is not available
+        else {
             ArticlesDbHelper mDbHelper = new ArticlesDbHelper(this);
             SQLiteDatabase db = mDbHelper.getReadableDatabase();
 

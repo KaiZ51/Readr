@@ -70,6 +70,7 @@ public class NotificationService extends IntentService {
                                         return o1.publishedAt.compareTo(o2.publishedAt);
                                     }
                                 };
+                        final ArrayList<Sources_Content> sources = response.body().sources;
 
                         for (final Sources_Content source : response.body().sources) {
                             // Articles endpoint
@@ -80,9 +81,18 @@ public class NotificationService extends IntentService {
                                 @Override
                                 public void onResponse(Call<NewsAPI_Map> call, Response<NewsAPI_Map> response) {
                                     if (response.body() != null) {
-                                        articlesList.addAll(response.body().articles);
-                                        Collections.sort(articlesList, byPublishedAtComparator);
-                                        compareWithDb(articlesList.get(articlesList.size() - 1).publishedAt, category);
+                                        // if source is the last one, add the last articles and sort them by date,
+                                        // then check if the most recent article from the list is older than the
+                                        // newest API article.
+                                        if (source.id.equals(sources.get(sources.size() - 1).id)) {
+                                            articlesList.addAll(response.body().articles);
+                                            Collections.sort(articlesList, byPublishedAtComparator);
+                                            compareWithDb(articlesList.get(articlesList.size() - 1).publishedAt, category);
+                                        }
+                                        // if not, then just add articles from this source to the list.
+                                        else {
+                                            articlesList.addAll(response.body().articles);
+                                        }
                                     }
                                 }
 
@@ -113,7 +123,6 @@ public class NotificationService extends IntentService {
         // you will actually use after this query.
         String[] projection = {
                 ArticlesContract.ArticleEntry._ID,
-                ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE,
                 ArticlesContract.ArticleEntry.COLUMN_NAME_DATE,
                 ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY
         };
@@ -122,9 +131,6 @@ public class NotificationService extends IntentService {
         String selection = ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY + " = ?";
         String[] selectionArgs = {category};
 
-        // How you want the results sorted in the resulting Cursor
-        String sortOrder = ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + " DESC";
-
         Cursor c = db.query(
                 ArticlesContract.ArticleEntry.TABLE_NAME,   // The table to query
                 projection,                                 // The columns to return
@@ -132,23 +138,37 @@ public class NotificationService extends IntentService {
                 selectionArgs,                              // The values for the WHERE clause
                 null,                                       // don't group the rows
                 null,                                       // don't filter by row groups
-                sortOrder                                   // The sort order
+                null                                        // The sort order
         );
 
         if (c.getCount() > 0) {
-            c.moveToFirst();
-
+            List<Date> dateList = new ArrayList<>();
             Date itemDate = new Date();
             DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-            try {
-                itemDate = df.parse(c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE)));
-            } catch (ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+            while (c.moveToNext()) {
+                try {
+                    itemDate = df.parse(c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE)));
+                } catch (ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+                dateList.add(itemDate);
             }
 
-            if (itemDate.before(apiDate) && !itemDate.equals(apiDate)) {
-                System.out.println("yes on date comparison");
+            Collections.sort(dateList);
+
+            /*for (Date d : dateList) {
+                System.out.println("list date: " + d.toString());
+            }*/
+
+            Date lastDate = dateList.get(dateList.size() - 1);
+
+            if (lastDate.before(apiDate) && !lastDate.equals(apiDate)) {
+                /*System.out.println("yes on date comparison");
+                System.out.println("item date: " + lastDate);
+                System.out.println("api date: " + apiDate);*/
 
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_general)
@@ -166,8 +186,10 @@ public class NotificationService extends IntentService {
                 // This ensures that navigating backward from the Activity leads out of
                 // your application to the Home screen.
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+
                 // Adds the back stack for the Intent (but not the Intent itself)
                 stackBuilder.addParentStack(MainActivity.class);
+
                 // Adds the Intent that starts the Activity to the top of the stack
                 stackBuilder.addNextIntent(resultIntent);
                 PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
@@ -175,18 +197,12 @@ public class NotificationService extends IntentService {
                 mBuilder.setContentIntent(resultPendingIntent);
                 NotificationManager mNotificationManager =
                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
                 // mId allows you to update the notification later on.
                 mNotificationManager.notify(50, mBuilder.build());
             }
-        } else {
-            System.out.println("cursor is empty");
         }
 
         c.close();
-    }
-
-    // will count how many articles are new since the articles stored in the DB
-    private void newArticlesCount() {
-
     }
 }
