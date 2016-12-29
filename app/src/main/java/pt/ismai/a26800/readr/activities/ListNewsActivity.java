@@ -1,10 +1,7 @@
 package pt.ismai.a26800.readr.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,24 +12,18 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
 
 import pt.ismai.a26800.readr.R;
 import pt.ismai.a26800.readr.adapters.NewsAdapter;
+import pt.ismai.a26800.readr.asynctasks.LoadOfflineArticles;
 import pt.ismai.a26800.readr.custom_views.ExpandableHeightGridView;
 import pt.ismai.a26800.readr.newsapi.Articles.Articles_Map;
 import pt.ismai.a26800.readr.newsapi.Articles.NewsAPI_Interface;
@@ -41,8 +32,6 @@ import pt.ismai.a26800.readr.newsapi.Retrofit_Service;
 import pt.ismai.a26800.readr.newsapi.Sources.Sources_Content;
 import pt.ismai.a26800.readr.newsapi.Sources.Sources_Interface;
 import pt.ismai.a26800.readr.newsapi.Sources.Sources_Map;
-import pt.ismai.a26800.readr.sqlite.ArticlesContract;
-import pt.ismai.a26800.readr.sqlite.ArticlesDbHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -234,95 +223,7 @@ public class ListNewsActivity extends AppCompatActivity
         }
         // if internet connection is not available
         else {
-            ArticlesDbHelper mDbHelper = new ArticlesDbHelper(this);
-            SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
-            // Define a projection that specifies which columns from the database
-            // you will actually use after this query.
-            String[] projection = {
-                    ArticlesContract.ArticleEntry._ID,
-                    ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE,
-                    ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION,
-                    ArticlesContract.ArticleEntry.COLUMN_NAME_URL,
-                    ArticlesContract.ArticleEntry.COLUMN_NAME_URLTOIMAGE,
-                    ArticlesContract.ArticleEntry.COLUMN_NAME_DATE,
-                    ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY
-            };
-
-            // Filter results WHERE "title" = 'My Title'
-            String selection = ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY + " = ?";
-            String[] selectionArgs = {category};
-
-            // How you want the results sorted in the resulting Cursor
-            String sortOrder = ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + " DESC";
-
-            Cursor c = db.query(
-                    ArticlesContract.ArticleEntry.TABLE_NAME,   // The table to query
-                    projection,                                 // The columns to return
-                    selection,                                  // The columns for the WHERE clause
-                    selectionArgs,                              // The values for the WHERE clause
-                    null,                                       // don't group the rows
-                    null,                                       // don't filter by row groups
-                    sortOrder                                   // The sort order
-            );
-
-            if (c.getCount() > 0) {
-                NewsAdapter nAdapter = new NewsAdapter(ListNewsActivity.this, R.layout.article_layout);
-                List<Articles_Map> articles = new ArrayList<>();
-
-                while (c.moveToNext()) {
-                    String title = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE));
-                    String description = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION));
-                    String url = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_URL));
-                    String urlToImage = c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_URLTOIMAGE));
-
-                    Date date = new Date();
-                    DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-                    try {
-                        date = df.parse(c.getString(c.getColumnIndexOrThrow(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE)));
-                    } catch (ParseException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-
-                    Articles_Map article = new Articles_Map(title, description, url, urlToImage, date);
-                    articles.add(article);
-                }
-
-                nAdapter.addAll(articles);
-
-                ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
-                gv_content.setAdapter(nAdapter);
-                gv_content.setExpanded(true);
-
-                SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipelayout);
-                swipeLayout.setRefreshing(false);
-            } else {
-                // Use the Builder class for convenient dialog construction
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                final Intent i = new Intent(ListNewsActivity.this, MainActivity.class);
-
-                builder.setTitle(R.string.noarticles_title)
-                        .setMessage(R.string.noarticles_desc)
-                        .setPositiveButton(R.string.noarticles_back, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                startActivity(i);
-                            }
-                        })
-                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialogInterface) {
-                                startActivity(i);
-                            }
-                        });
-
-                // Create the AlertDialog object and show it
-                builder.create();
-                builder.show();
-            }
-
-            c.close();
-            mDbHelper.close();
+            new LoadOfflineArticles(this, getWindow().getDecorView().getRootView()).execute(category);
         }
     }
 }

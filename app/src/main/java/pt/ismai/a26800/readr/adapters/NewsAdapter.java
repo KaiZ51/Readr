@@ -1,12 +1,9 @@
 package pt.ismai.a26800.readr.adapters;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
@@ -19,16 +16,16 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
 import pt.ismai.a26800.readr.activities.ShowArticleActivity;
+import pt.ismai.a26800.readr.asynctasks.InsertNewArticles;
 import pt.ismai.a26800.readr.newsapi.Articles.Articles_Map;
 import pt.ismai.a26800.readr.R;
-import pt.ismai.a26800.readr.sqlite.ArticlesContract;
-import pt.ismai.a26800.readr.sqlite.ArticlesDbHelper;
 
 public class NewsAdapter extends ArrayAdapter<Articles_Map> {
     private final Context mContext;
@@ -43,10 +40,8 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
     }
 
     public void addAll(HashSet<Articles_Map> others, String category) {
-        ArticlesDbHelper mDbHelper = new ArticlesDbHelper(getContext());
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
         Date comparisonDate = new Date(0);
+        List<Articles_Map> listArticles = new ArrayList<>();
 
         for (Articles_Map a : others) {
             if (a.title != null &&
@@ -57,24 +52,11 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
                     a.publishedAt != null &&
                     a.publishedAt.after(comparisonDate)) {
                 this.doAdd(a);
-
-                if (!checkExistsDb(db, a.title, a.publishedAt.toString(), category)) {
-                    //System.out.println(a.title + " doesnt exist");
-
-                    // Create a new map of values, where column names are the keys
-                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.title);
-                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION, a.description);
-                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_URL, a.url);
-                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_URLTOIMAGE, a.urlToImage);
-                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE, a.publishedAt.toString());
-                    values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY, category);
-
-                    // Insert the new row, returning the primary key value of the new row
-                    db.insert(ArticlesContract.ArticleEntry.TABLE_NAME, null, values);
-                }
+                listArticles.add(a);
             }
         }
-        mDbHelper.close();
+
+        new InsertNewArticles(getContext(), listArticles, category).execute();
         this.sort(byPublishedAtComparator);
     }
 
@@ -97,44 +79,6 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
                     return o2.publishedAt.compareTo(o1.publishedAt);
                 }
             };
-
-    private boolean checkExistsDb(SQLiteDatabase db, String title, String date, String category) {
-        /*ArticlesDbHelper mDbHelper = new ArticlesDbHelper(getContext());
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();*/
-
-        // Define a projection that specifies which columns from the database
-        // you will actually use after this query.
-        String[] projection = {
-                ArticlesContract.ArticleEntry._ID,
-                ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE,
-                ArticlesContract.ArticleEntry.COLUMN_NAME_DATE,
-                ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY
-        };
-
-        // Filter results WHERE "title" = 'My Title'
-        String selection = ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE + " = ? " +
-                "AND " + ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + " = ? " +
-                "AND " + ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY + " = ?";
-        String[] selectionArgs = {title, date, category};
-
-        Cursor c = db.query(
-                ArticlesContract.ArticleEntry.TABLE_NAME,   // The table to query
-                projection,                                 // The columns to return
-                selection,                                  // The columns for the WHERE clause
-                selectionArgs,                              // The values for the WHERE clause
-                null,                                       // don't group the rows
-                null,                                       // don't filter by row groups
-                null                                        // The sort order
-        );
-
-        if (c.moveToFirst()) {
-            c.close();
-            return true;
-        } else {
-            c.close();
-            return false;
-        }
-    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
