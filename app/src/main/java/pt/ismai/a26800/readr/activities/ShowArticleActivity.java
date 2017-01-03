@@ -1,6 +1,7 @@
 package pt.ismai.a26800.readr.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -14,8 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 
 import pt.ismai.a26800.readr.R;
@@ -35,13 +39,20 @@ public class ShowArticleActivity extends AppCompatActivity {
         url = getIntent().getStringExtra("url");
         final SwipeRefreshLayout srLayout = (SwipeRefreshLayout) findViewById(R.id.sr_layout);
         final WebView wv = (WebView) findViewById(R.id.wv_url);
+        final ProgressBar pb = (ProgressBar) findViewById(R.id.progressbar);
         //getSupportActionBar().setHideOnContentScrollEnabled(true);
 
         srLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 wv.reload();
-                srLayout.setRefreshing(false);
+                pb.setVisibility(View.VISIBLE);
+            }
+        });
+
+        wv.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                pb.setProgress(progress);
             }
         });
 
@@ -54,8 +65,11 @@ public class ShowArticleActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 setTitle(wv.getTitle());
+                srLayout.setRefreshing(false);
+                pb.setVisibility(View.INVISIBLE);
             }
         });
+        wv.getSettings().setJavaScriptEnabled(true);
         wv.loadUrl(url);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
