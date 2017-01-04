@@ -196,5 +196,6 @@ public class NotificationService extends IntentService {
         }
 
         c.close();
+        mDbHelper.close();
     }
 }

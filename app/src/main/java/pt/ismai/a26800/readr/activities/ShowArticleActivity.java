@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ShareActionProvider;
@@ -35,18 +34,9 @@ public class ShowArticleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         url = getIntent().getStringExtra("url");
-        final SwipeRefreshLayout srLayout = (SwipeRefreshLayout) findViewById(R.id.sr_layout);
         final WebView wv = (WebView) findViewById(R.id.wv_url);
         final ProgressBar pb = (ProgressBar) findViewById(R.id.progressbar);
         //getSupportActionBar().setHideOnContentScrollEnabled(true);
-
-        srLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                wv.reload();
-                pb.setVisibility(View.VISIBLE);
-            }
-        });
 
         wv.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
@@ -63,7 +53,7 @@ public class ShowArticleActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 setTitle(wv.getTitle());
-                srLayout.setRefreshing(false);
+                //srLayout.setRefreshing(false);
                 pb.setVisibility(View.GONE);
             }
         });
@@ -159,15 +149,23 @@ public class ShowArticleActivity extends AppCompatActivity {
             }
         }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+        if (id == R.id.action_refresh) {
+            WebView wv = (WebView) findViewById(R.id.wv_url);
+            wv.reload();
+
+            ProgressBar pb = (ProgressBar) findViewById(R.id.progressbar);
+            pb.setVisibility(View.VISIBLE);
         }
 
         if (id == R.id.action_openbrowser) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(browserIntent);
+        }
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
