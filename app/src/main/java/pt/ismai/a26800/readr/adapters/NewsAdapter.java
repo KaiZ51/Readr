@@ -30,7 +30,7 @@ import pt.ismai.a26800.readr.R;
 public class NewsAdapter extends ArrayAdapter<Articles_Map> {
     private final Context mContext;
 
-    public NewsAdapter(Context c, int resource) {
+    public NewsAdapter(Context c, @SuppressWarnings("SameParameterValue") int resource) {
         super(c, resource);
         this.mContext = c;
     }
@@ -44,13 +44,14 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         List<Articles_Map> listArticles = new ArrayList<>();
 
         for (Articles_Map a : others) {
-            if (a.title != null &&
-                    a.description != null &&
-                    a.description.trim().length() > 0 &&
-                    a.url != null &&
-                    a.urlToImage != null &&
-                    a.publishedAt != null &&
-                    a.publishedAt.after(comparisonDate)) {
+            if (a.getTitle() != null &&
+                    a.getDescription() != null &&
+                    a.getDescription().trim().length() > 0 &&
+                    a.getUrl() != null &&
+                    a.getUrlToImage() != null &&
+                    a.getUrlToImage().trim().length() > 0 &&
+                    a.getPublishedAt() != null &&
+                    a.getPublishedAt().after(comparisonDate)) {
                 this.doAdd(a);
                 listArticles.add(a);
             }
@@ -71,12 +72,12 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
             new Comparator<Articles_Map>() {
                 @Override
                 public int compare(Articles_Map o1, Articles_Map o2) {
-                    if (o1.publishedAt == null) {
-                        return (o2.publishedAt == null) ? 0 : -1;
-                    } else if (o2.publishedAt == null) {
+                    if (o1.getPublishedAt() == null) {
+                        return (o2.getPublishedAt() == null) ? 0 : -1;
+                    } else if (o2.getPublishedAt() == null) {
                         return 1;
                     }
-                    return o2.publishedAt.compareTo(o1.publishedAt);
+                    return o2.getPublishedAt().compareTo(o1.getPublishedAt());
                 }
             };
 
@@ -97,7 +98,7 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
 
                 if (activeNetwork != null && activeNetwork.isConnected()) {
                     Intent intent = new Intent(mContext, ShowArticleActivity.class);
-                    intent.putExtra("url", article.url);
+                    intent.putExtra("url", article.getUrl());
                     mContext.startActivity(intent);
                 } else {
                     // Use the Builder class for convenient dialog construction
@@ -122,9 +123,9 @@ public class NewsAdapter extends ArrayAdapter<Articles_Map> {
         TextView title = (TextView) view.findViewById(R.id.title);
         TextView description = (TextView) view.findViewById(R.id.description);
 
-        Picasso.with(mContext).load(article.urlToImage).fit().centerCrop().into(thumbnail);
-        title.setText(article.title);
-        description.setText(article.description);
+        Picasso.with(mContext).load(article.getUrlToImage()).fit().centerCrop().into(thumbnail);
+        title.setText(article.getTitle());
+        description.setText(article.getDescription());
 
         return view;
     }

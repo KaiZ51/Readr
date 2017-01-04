@@ -13,9 +13,9 @@ import pt.ismai.a26800.readr.sqlite.ArticlesContract;
 import pt.ismai.a26800.readr.sqlite.ArticlesDbHelper;
 
 public class InsertNewArticles extends AsyncTask<Void, Void, Void> {
-    private Context context;
-    private List<Articles_Map> listArticles;
-    private String category;
+    private final Context context;
+    private final List<Articles_Map> listArticles;
+    private final String category;
 
     public InsertNewArticles(Context context, List<Articles_Map> listArticles, String category) {
         this.context = context;
@@ -43,7 +43,7 @@ public class InsertNewArticles extends AsyncTask<Void, Void, Void> {
             String selection = ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE + " = ? " +
                     "AND " + ArticlesContract.ArticleEntry.COLUMN_NAME_DATE + " = ? " +
                     "AND " + ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY + " = ?";
-            String[] selectionArgs = {a.title, a.publishedAt.toString(), category};
+            String[] selectionArgs = {a.getTitle(), a.getPublishedAt().toString(), category};
 
             Cursor c = db.query(
                     ArticlesContract.ArticleEntry.TABLE_NAME,   // The table to query
@@ -59,11 +59,11 @@ public class InsertNewArticles extends AsyncTask<Void, Void, Void> {
                 c.close();
             } else {
                 // Create a new map of values, where column names are the keys
-                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.title);
-                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION, a.description);
-                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_URL, a.url);
-                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_URLTOIMAGE, a.urlToImage);
-                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE, a.publishedAt.toString());
+                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_TITLE, a.getTitle());
+                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DESCRIPTION, a.getDescription());
+                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_URL, a.getUrl());
+                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_URLTOIMAGE, a.getUrlToImage());
+                values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_DATE, a.getPublishedAt().toString());
                 values.put(ArticlesContract.ArticleEntry.COLUMN_NAME_CATEGORY, category);
 
                 // Insert the new row, returning the primary key value of the new row

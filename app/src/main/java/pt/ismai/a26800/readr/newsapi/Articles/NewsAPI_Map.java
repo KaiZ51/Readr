@@ -3,13 +3,13 @@ package pt.ismai.a26800.readr.newsapi.Articles;
 import java.util.List;
 
 public class NewsAPI_Map {
-    private final String status;
-    private final String source;
-    public final List<Articles_Map> articles;
+    private final List<Articles_Map> articles;
 
-    public NewsAPI_Map(String status, String source, List<Articles_Map> articles) {
-        this.status = status;
-        this.source = source;
+    public NewsAPI_Map(List<Articles_Map> articles) {
         this.articles = articles;
+    }
+
+    public List<Articles_Map> getArticles() {
+        return articles;
     }
 }

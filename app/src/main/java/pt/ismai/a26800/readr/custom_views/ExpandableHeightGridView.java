@@ -7,7 +7,7 @@ import android.widget.GridView;
 
 public class ExpandableHeightGridView extends GridView {
 
-    boolean expanded = false;
+    private boolean expanded = false;
 
     public ExpandableHeightGridView(Context context) {
         super(context);
@@ -17,11 +17,11 @@ public class ExpandableHeightGridView extends GridView {
         super(context, attrs);
     }
 
-    public ExpandableHeightGridView(Context context, AttributeSet attrs,
-                                    int defStyle) {
+    public ExpandableHeightGridView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean isExpanded() {
         return expanded;
     }
@@ -43,7 +43,7 @@ public class ExpandableHeightGridView extends GridView {
         }
     }
 
-    public void setExpanded(boolean expanded) {
+    public void setExpanded(@SuppressWarnings("SameParameterValue") boolean expanded) {
         this.expanded = expanded;
     }
 }

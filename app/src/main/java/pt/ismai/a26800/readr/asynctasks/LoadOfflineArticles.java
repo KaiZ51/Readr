@@ -27,8 +27,8 @@ import pt.ismai.a26800.readr.sqlite.ArticlesContract;
 import pt.ismai.a26800.readr.sqlite.ArticlesDbHelper;
 
 public class LoadOfflineArticles extends AsyncTask<String, Void, NewsAdapter> {
-    private Context context;
-    private View rootView;
+    private final Context context;
+    private final View rootView;
 
     public LoadOfflineArticles(Context context, View rootView) {
         this.context = context;

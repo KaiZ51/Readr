@@ -3,11 +3,11 @@ package pt.ismai.a26800.readr.newsapi.Articles;
 import java.util.Date;
 
 public class Articles_Map {
-    public final String title;
-    public final String description;
-    public String url;
-    public String urlToImage;
-    public Date publishedAt;
+    private final String title;
+    private final String description;
+    private final String url;
+    private final String urlToImage;
+    private final Date publishedAt;
 
     public Articles_Map(String title, String description, String url, String urlToImage, Date publishedAt) {
         this.title = title;
@@ -15,6 +15,26 @@ public class Articles_Map {
         this.url = url;
         this.urlToImage = urlToImage;
         this.publishedAt = publishedAt;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getUrlToImage() {
+        return urlToImage;
+    }
+
+    public Date getPublishedAt() {
+        return publishedAt;
     }
 
     @Override

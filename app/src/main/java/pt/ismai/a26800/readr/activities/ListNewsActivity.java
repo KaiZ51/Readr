@@ -155,6 +155,8 @@ public class ListNewsActivity extends AppCompatActivity
     private void loadData(String category) {
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipelayout);
+        swipeLayout.setRefreshing(true);
 
         // if internet connection is available
         if (activeNetwork != null && activeNetwork.isConnected()) {
@@ -174,25 +176,25 @@ public class ListNewsActivity extends AppCompatActivity
                         final NewsAdapter nAdapter = new NewsAdapter(ListNewsActivity.this,
                                 R.layout.article_layout);
                         final HashSet<Articles_Map> articlesSet = new HashSet<>();
-                        final ArrayList<Sources_Content> sources = response.body().sources;
+                        final ArrayList<Sources_Content> sources = response.body().getSources();
 
-                        for (final Sources_Content source : response.body().sources) {
+                        for (final Sources_Content source : response.body().getSources()) {
                             // Articles endpoint
                             NewsAPI_Interface client = Retrofit_Service.createService(NewsAPI_Interface.class);
-                            Call<NewsAPI_Map> call = client.getData(source.id, "17f8ddef543c4c81a9df2beb60c2a478");
+                            Call<NewsAPI_Map> call = client.getData(source.getId(), "17f8ddef543c4c81a9df2beb60c2a478");
 
                             call.enqueue(new Callback<NewsAPI_Map>() {
                                 @Override
                                 public void onResponse(Call<NewsAPI_Map> call, Response<NewsAPI_Map> response) {
                                     if (response.body() != null) {
                                         // if source is the last one, add all articles from the HashSet to the NewsAdapter.
-                                        if (source.id.equals(sources.get(sources.size() - 1).id)) {
-                                            articlesSet.addAll(response.body().articles);
-                                            nAdapter.addAll(articlesSet, source.category);
+                                        if (source.getId().equals(sources.get(sources.size() - 1).getId())) {
+                                            articlesSet.addAll(response.body().getArticles());
+                                            nAdapter.addAll(articlesSet, source.getCategory());
                                         }
                                         // if not, then just add articles from this source to the HashSet.
                                         else {
-                                            articlesSet.addAll(response.body().articles);
+                                            articlesSet.addAll(response.body().getArticles());
                                         }
                                     }
                                 }
@@ -209,8 +211,6 @@ public class ListNewsActivity extends AppCompatActivity
                         ExpandableHeightGridView gv_content = (ExpandableHeightGridView) findViewById(R.id.gv_content);
                         gv_content.setAdapter(nAdapter);
                         gv_content.setExpanded(true);
-
-                        SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipelayout);
                         swipeLayout.setRefreshing(false);
                     }
                 }
@@ -224,6 +224,7 @@ public class ListNewsActivity extends AppCompatActivity
         // if internet connection is not available
         else {
             new LoadOfflineArticles(this, getWindow().getDecorView().getRootView()).execute(category);
+            swipeLayout.setRefreshing(false);
         }
     }
 }

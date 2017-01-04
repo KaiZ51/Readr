@@ -62,20 +62,20 @@ public class NotificationService extends IntentService {
                                 new Comparator<Articles_Map>() {
                                     @Override
                                     public int compare(Articles_Map o1, Articles_Map o2) {
-                                        if (o1.publishedAt == null) {
-                                            return (o2.publishedAt == null) ? 0 : -1;
-                                        } else if (o2.publishedAt == null) {
+                                        if (o1.getPublishedAt() == null) {
+                                            return (o2.getPublishedAt() == null) ? 0 : -1;
+                                        } else if (o2.getPublishedAt() == null) {
                                             return 1;
                                         }
-                                        return o1.publishedAt.compareTo(o2.publishedAt);
+                                        return o1.getPublishedAt().compareTo(o2.getPublishedAt());
                                     }
                                 };
-                        final ArrayList<Sources_Content> sources = response.body().sources;
+                        final ArrayList<Sources_Content> sources = response.body().getSources();
 
-                        for (final Sources_Content source : response.body().sources) {
+                        for (final Sources_Content source : response.body().getSources()) {
                             // Articles endpoint
                             NewsAPI_Interface client = Retrofit_Service.createService(NewsAPI_Interface.class);
-                            Call<NewsAPI_Map> call = client.getData(source.id, "17f8ddef543c4c81a9df2beb60c2a478");
+                            Call<NewsAPI_Map> call = client.getData(source.getId(), "17f8ddef543c4c81a9df2beb60c2a478");
 
                             call.enqueue(new Callback<NewsAPI_Map>() {
                                 @Override
@@ -84,14 +84,14 @@ public class NotificationService extends IntentService {
                                         // if source is the last one, add the last articles and sort them by date,
                                         // then check if the most recent article from the list is older than the
                                         // newest API article.
-                                        if (source.id.equals(sources.get(sources.size() - 1).id)) {
-                                            articlesList.addAll(response.body().articles);
+                                        if (source.getId().equals(sources.get(sources.size() - 1).getId())) {
+                                            articlesList.addAll(response.body().getArticles());
                                             Collections.sort(articlesList, byPublishedAtComparator);
-                                            compareWithDb(articlesList.get(articlesList.size() - 1).publishedAt, category);
+                                            compareWithDb(articlesList.get(articlesList.size() - 1).getPublishedAt(), category);
                                         }
                                         // if not, then just add articles from this source to the list.
                                         else {
-                                            articlesList.addAll(response.body().articles);
+                                            articlesList.addAll(response.body().getArticles());
                                         }
                                     }
                                 }
@@ -159,17 +159,9 @@ public class NotificationService extends IntentService {
 
             Collections.sort(dateList);
 
-            /*for (Date d : dateList) {
-                System.out.println("list date: " + d.toString());
-            }*/
-
             Date lastDate = dateList.get(dateList.size() - 1);
 
             if (lastDate.before(apiDate) && !lastDate.equals(apiDate)) {
-                /*System.out.println("yes on date comparison");
-                System.out.println("item date: " + lastDate);
-                System.out.println("api date: " + apiDate);*/
-
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_general)
                         .setContentTitle("There are new articles available!")

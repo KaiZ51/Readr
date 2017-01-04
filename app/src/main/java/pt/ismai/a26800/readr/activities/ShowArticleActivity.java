@@ -1,7 +1,6 @@
 package pt.ismai.a26800.readr.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -15,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -26,8 +24,8 @@ import pt.ismai.a26800.readr.R;
 
 public class ShowArticleActivity extends AppCompatActivity {
     private ShareActionProvider mShareActionProvider;
-    String url;
-    boolean immersiveCheck = false;
+    private String url;
+    private boolean immersiveCheck = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +64,7 @@ public class ShowArticleActivity extends AppCompatActivity {
             public void onPageFinished(WebView view, String url) {
                 setTitle(wv.getTitle());
                 srLayout.setRefreshing(false);
-                pb.setVisibility(View.INVISIBLE);
+                pb.setVisibility(View.GONE);
             }
         });
         wv.getSettings().setJavaScriptEnabled(true);
@@ -96,10 +94,6 @@ public class ShowArticleActivity extends AppCompatActivity {
                                         }
                                     }
                                 }, 3000);
-                            } else {
-                                // TODO: The system bars are NOT visible. Make any desired
-                                // adjustments to your UI, such as hiding the action bar or
-                                // other navigational controls.
                             }
                         }
                     });
@@ -160,9 +154,6 @@ public class ShowArticleActivity extends AppCompatActivity {
             }
             // if immersive mode is on, then set it off
             else {
-                /*decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);*/
                 exitImmersive();
                 immersiveCheck = false;
             }
@@ -190,7 +181,7 @@ public class ShowArticleActivity extends AppCompatActivity {
     }
 
     @SuppressLint("InlinedApi")
-    public void enterImmersive() {
+    private void enterImmersive() {
         View decorView = getWindow().getDecorView();
 
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -204,7 +195,7 @@ public class ShowArticleActivity extends AppCompatActivity {
         immersiveCheck = true;
     }
 
-    public void exitImmersive() {
+    private void exitImmersive() {
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(0);
         getSupportActionBar().show();
