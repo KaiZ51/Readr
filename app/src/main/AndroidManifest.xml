@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pt.ismai.a26800.readr">
+    package="com.pedro.readr">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.pedro.readr.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
@@ -23,26 +23,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ListNewsActivity"
-            android:parentActivityName=".activities.MainActivity"
+            android:name="com.pedro.readr.activities.ListNewsActivity"
+            android:parentActivityName="com.pedro.readr.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ismai.a26800.readr.activities.MainActivity" />
+                android:value="com.pedro.readr.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.ShowArticleActivity"
+            android:name="com.pedro.readr.activities.ShowArticleActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name="com.pedro.readr.activities.SettingsActivity"
             android:label="@string/action_settings"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
-            android:name=".notifications.NotificationService"
+            android:name="com.pedro.readr.notifications.NotificationService"
             android:exported="false" />
         <receiver
-            android:name=".notifications.NotificationAlarm"
+            android:name="com.pedro.readr.notifications.NotificationAlarm"
             android:process=":remote" />
     </application>
 

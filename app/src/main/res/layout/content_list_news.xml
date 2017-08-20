@@ -13,10 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        tools:context="pt.ismai.a26800.readr.activities.ListNewsActivity"
+        tools:context="com.pedro.readr.activities.ListNewsActivity"
         tools:showIn="@layout/activity_list_news">
 
-        <pt.ismai.a26800.readr.custom_views.ExpandableHeightGridView
+        <com.pedro.readr.custom_views.ExpandableHeightGridView
             android:id="@+id/gv_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -25,7 +25,7 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
 
-        </pt.ismai.a26800.readr.custom_views.ExpandableHeightGridView>
+        </com.pedro.readr.custom_views.ExpandableHeightGridView>
 
     </android.support.v4.widget.NestedScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>

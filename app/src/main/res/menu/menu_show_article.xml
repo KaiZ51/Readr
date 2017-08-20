@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="pt.ismai.a26800.readr.activities.ShowArticleActivity">
+    tools:context="com.pedro.readr.activities.ShowArticleActivity">
 
     <item
         android:id="@+id/action_fullscreen"
